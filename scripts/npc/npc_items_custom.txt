@@ -196,7 +196,7 @@
 		"ID"										"3006"
 		"BaseClass"							"item_lua"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
-		"AbilityTextureName"		"item_chainmail"
+		"AbilityTextureName"		"item_platemail"
 		"ScriptFile"						"item_armor_tier_2"
 
 		"ItemStackable"					"0"
@@ -230,7 +230,7 @@
 		"ID"										"3007"
 		"BaseClass"							"item_lua"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
-		"AbilityTextureName"		"item_chainmail"
+		"AbilityTextureName"		"item_assault"
 		"ScriptFile"						"item_armor_tier_3"
 
 		"ItemStackable"					"0"

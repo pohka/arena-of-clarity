@@ -1,11 +1,5 @@
 item_armor_tiered_modifier = class({})
 
-function item_armor_tiered_modifier:OnCreated()
-  if IsServer() then
-    print("created amoror modifier")
-  end
-end
-
 function item_armor_tiered_modifier:DeclareFunctions()
   local funcs = {
     MODIFIER_PROPERTY_HEALTH_BONUS
