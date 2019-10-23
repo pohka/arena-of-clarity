@@ -2,8 +2,12 @@ if GameSetup == nil then
   GameSetup = class({})
 end
 
+require("filters")
+
 --nil will not force a hero selection
 local forceHero = "skeleton_king"
+
+
 
 
 function GameSetup:init()
@@ -13,7 +17,7 @@ function GameSetup:init()
     GameRules:SetCustomGameSetupAutoLaunchDelay(0)
     GameRules:SetHeroSelectionTime(10)
     GameRules:SetStrategyTime(0)
-    GameRules:SetPreGameTime(5)
+    GameRules:SetPreGameTime(0)
     GameRules:SetShowcaseTime(0)
     GameRules:SetPostGameTime(5)
     
@@ -26,7 +30,7 @@ function GameSetup:init()
     GameMode:SetDeathOverlayDisabled(true)
     GameMode:SetWeatherEffectsDisabled(true)
 
-    --disable music events
+    -- --disable music events
     GameRules:SetCustomGameAllowHeroPickMusic(false)
     GameRules:SetCustomGameAllowMusicAtGameStart(false)
     GameRules:SetCustomGameAllowBattleMusic(false)
@@ -40,10 +44,17 @@ function GameSetup:init()
     --     return true
     -- end, self)
 
-    GameSetup:AddInventroyFilter()
+
+
+    Filters:AddAll()
 
     --multiple players can pick the same hero
     GameRules:SetSameHeroSelectionEnabled(true)
+
+    --disable default respawning and buyback
+    GameRules:SetHeroRespawnEnabled(false)
+    GameMode:SetBuybackEnabled(false)
+    GameMode:SetFixedRespawnTime(1)
 
     --force single hero selection (optional)
     if forceHero ~= nil then
@@ -55,6 +66,8 @@ function GameSetup:init()
 
     GameRules:SetUseUniversalShopMode(true)
     
+    
+    
   else --release build
 
     --put your rules here
@@ -62,86 +75,7 @@ function GameSetup:init()
   end
 end
 
-function GameSetup:AddInventroyFilter()
 
-  --this filter functionality:
-  --  1. removes starting teleport
-  --  2. drops lower tier item of same type from inventory
-  GameRules:GetGameModeEntity():SetItemAddedToInventoryFilter(
-		function(ctx, event)
-			local item = EntIndexToHScript(event.item_entindex_const)
-
-			--remove starting teleport scroll
-			if item:GetAbilityName() == "item_tpscroll" and item:GetPurchaser() == nil then 
-				return false
-			end
-			
-			local unitPickUpIndex = event.inventory_parent_entindex_const
-			local unit = EntIndexToHScript(unitPickUpIndex)
-			--local unit = item:GetOwner()
-			if unit ~= nil then
-				local itemPos = item:GetAbsOrigin()
-
-				local itemName = item:GetName()
-        local sub = string.sub(itemName, 1, -2)
-        
-        --table of items to spawn
-        local itemPrefixs = {
-          "item_boots_tier_",
-          "item_armor_tier_"
-        }
-
-        for i=1, #itemPrefixs do
-          local itemPrefix = itemPrefixs[i]
-
-          if sub == itemPrefix then
-            local num = string.sub(itemName, -1)
-            local tier = tonumber(num)
-
-            --get current tier by name
-            local currentTier = 0
-            if unit:HasItemInInventory(itemPrefix .. "1") then
-              currentTier = 1
-            elseif unit:HasItemInInventory(itemPrefix .. "2") then
-              currentTier = 2
-            elseif unit:HasItemInInventory(itemPrefix .. "3") then
-              currentTier = 3
-            end
-
-            if currentTier < tier then
-              --drop current item if new item tier is higher
-              if currentTier > 0 then
-                local curItemName = itemPrefix .. currentTier
-                local curItem = Query:findItemByName(unit, curItemName)
-                if curItem ~= nil then
-                  unit:RemoveItem(curItem)
-                  local itemCopy = CreateItem(curItemName, nil, nil)
-                  local pos = unit:GetAbsOrigin()
-                  local drop = CreateItemOnPositionSync( pos, itemCopy )
-                  local pos_launch = pos+RandomVector(RandomFloat(30,50))
-                  itemCopy:LaunchLoot(false, 250, 0.75, pos_launch)
-                end
-              end
-            --drop item because we currently have a higher or equal item
-            elseif currentTier >= tier then
-              local pos = unit:GetAbsOrigin()
-              local drop = CreateItemOnPositionSync( pos, item )
-              local pos_launch = pos+RandomVector(RandomFloat(30,50))
-              item:LaunchLoot(false, 250, 0.75, pos_launch)
-              return false
-            end
-          end --end of item loop
-				end
-			end
-
-      --this event is broken in dota, so calling it from here instead
-      if item.OnItemEquipped ~= nil then
-        item:OnItemEquipped(item)
-      end
-		  return true
-		end,
-		self)
-end
 
 function GameSetup:OnStateChange()
   --random hero once we reach strategy phase
@@ -155,9 +89,9 @@ function GameSetup:OnStateChange()
       local playerID= PlayerResource:GetNthPlayerIDOnTeam(DOTA_TEAM_GOODGUYS, 1)
       print("playerID:" .. playerID)
       local player = PlayerResource:GetPlayer(playerID)
-      local unit = CreateUnitByName("npc_dota_hero_sven", Vector(0,0,0), true, nil, nil, DOTA_TEAM_BADGUYS)
+      --local unit = CreateUnitByName("npc_dota_hero_sven", Vector(0,0,0), true, nil, nil, DOTA_TEAM_BADGUYS)
 
-      unit:SetControllableByPlayer(playerID, true)
+      --unit:SetControllableByPlayer(playerID, true)
       
     end
     

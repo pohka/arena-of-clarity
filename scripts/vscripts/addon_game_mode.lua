@@ -6,6 +6,8 @@ end
 
 require("game_setup")
 require("query")
+require("custom_game_state")
+
 
 function Precache( context )
 	--[[
@@ -28,8 +30,6 @@ function Precache( context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_items.vsndevts", context )
 end
 
-require("game_setup")
-
 -- Create the game mode when we activate
 function Activate()
 	GameRules.AddonTemplate = BattleArena()
@@ -38,29 +38,15 @@ end
 
 
 function BattleArena:InitGameMode()
-	print( "Template addon is loaded." )
-	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
+	print( "BattleArena Init" )
 
 	GameSetup:init()
+	CustomGameState:init()
+	
+	
 
 	ListenToGameEvent("npc_spawned", Dynamic_Wrap(self, "OnUnitSpawned"), self)
-
-	ListenToGameEvent("entity_killed", Dynamic_Wrap(self, "OnUnitKilled"), self)
 end
-
-
-function BattleArena:OnUnitKilled( args )
-
-	local unit = EntIndexToHScript(args.entindex_killed)
-
-	if unit ~= nil then
-		if unit:IsHero() then
-			print("killed hero:" .. unit:GetName())
-		end
-	end
-end
-
-
 
 
 
@@ -90,16 +76,4 @@ function BattleArena:OnUnitSpawned( args )
 			end
 		end
 	end
-end
-
-
--- Evaluate the state of the game
-function BattleArena:OnThink()
-	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		--print( "Template addon script is running." )
-		
-	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then
-		return nil
-	end
-	return 1
 end

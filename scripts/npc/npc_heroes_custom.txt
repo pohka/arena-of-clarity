@@ -40,7 +40,6 @@
 		"MovementSpeed"				"350"		// Speed.	
 
 		"StatusHealth"				"4"		// Base health.
-	//	"StatusMaxHealth"				"4"		// Base health.
 		"StatusHealthRegen"			"0.0"		// Health regeneration rate.
 		"StatusMana"				"100"			// Base mana.
 		"StatusManaRegen"			"0.0"		// Mana regeneration rate.
@@ -71,6 +70,14 @@
 		"Ability17"						""
 
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
-		"AttackCapabilities"		"DOTA_UNIT_CAP_NO_ATTACK"
+		"MovementSpeed"				"350"		// Speed.	
+
+		"StatusHealth"				"4"		// Base health.
+		"StatusHealthRegen"			"0.0"		// Health regeneration rate.
+		"StatusMana"				"100"			// Base mana.
+		"StatusManaRegen"			"0.0"		// Mana regeneration rate.
+
+		"VisionDaytimeRange"		"1000"		// Range of vision during day light.
+		"AttackCapabilities"		"DOTA_UNIT_CAP_NO_ATTACK"	
 	}
 }

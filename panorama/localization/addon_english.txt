@@ -1,0 +1,5 @@
+"addon"
+{
+	"addonname"										"Arena of Clarity"
+}
+

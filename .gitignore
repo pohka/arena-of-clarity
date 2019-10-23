@@ -1,3 +1,5 @@
 maps/*
 materials/*
 particles/*
+*.cfg
+panorama/layout/*
