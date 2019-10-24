@@ -3,6 +3,7 @@ if GameSetup == nil then
 end
 
 require("filters")
+require("constants")
 
 --nil will not force a hero selection
 local forceHero = "skeleton_king"
@@ -82,111 +83,97 @@ function GameSetup:OnStateChange()
   if GameRules:State_Get() == DOTA_GAMERULES_STATE_STRATEGY_TIME then
     GameSetup:RandomForNoHeroSelected()
   elseif GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-    GameSetup:SpawnItems()
 
-    if IsInToolsMode() then
-      --create test hero and allow player to control it
-      local playerID= PlayerResource:GetNthPlayerIDOnTeam(DOTA_TEAM_GOODGUYS, 1)
-      print("playerID:" .. playerID)
-      local player = PlayerResource:GetPlayer(playerID)
-      --local unit = CreateUnitByName("npc_dota_hero_sven", Vector(0,0,0), true, nil, nil, DOTA_TEAM_BADGUYS)
-
-      --unit:SetControllableByPlayer(playerID, true)
-      
-    end
     
   end
 end
 
--- spawns random items of each type in random spawn point
--- the spawn points for each item is unique and all mirrored for each team
-function GameSetup:SpawnItems()
-  print("spawning items")
+-- -- spawns random items of each type in random spawn point
+-- -- the spawn points for each item is unique and all mirrored for each team
+-- function GameSetup:SpawnItems()
+--   print("spawning items")
 
-  --table of items to spawn
-  local items = {
-    "item_boots_tier_",
-    "item_armor_tier_"
-  }
+--   --table of items to spawn
+--   local items = {
+--     "item_boots_tier_",
+--     "item_armor_tier_"
+--   }
 
-  --item rarity
-  local tier2Rate = 35
-  local tier3Rate = 20
+--   --item rarity
+--   local tier2Rate = 35
+--   local tier3Rate = 15
 
-  --teams
-  local firstTeam = DOTA_TEAM_GOODGUYS
-  local lastTeam = DOTA_TEAM_GOODGUYS
+--   --local lastTeam = DOTA_TEAM_GOODGUYS
 
-  local totalSpawnPts = 10 -- total possible spawn locations
-  local maxSpawns = 4 -- total number of item of each type spawned
+--   local totalSpawnPts = 10 -- total possible spawn locations
+--   local maxSpawns = PLAYERS_PER_TEAM+1 -- total number of item of each type spawned
 
-  if totalSpawnPts < maxSpawns * #items then
-    print("WARNING: more total spawn points needed")
-  end
+--   if totalSpawnPts < maxSpawns * #items then
+--     print("WARNING: more total spawn points needed")
+--   end
 
-  --fill table with indexes
-  local unusedSpawnIndexes = {}
-  for i=1, totalSpawnPts do
-    table.insert(unusedSpawnIndexes, i)
-  end
+--   --fill table with indexes
+--   local unusedSpawnIndexes = {}
+--   for i=1, totalSpawnPts do
+--     table.insert(unusedSpawnIndexes, i)
+--   end
 
   
-  for itemIndex=1, #items do
-    --table for spawnIndexes for this item
-    local spawnPts = {}
+--   for itemIndex=1, #items do
+--     --table for spawnIndexes for this item
+--     local spawnPts = {}
     
-     --pick random indexes from unused indexes (each spawn point index is unique)
-    while #spawnPts < maxSpawns do
-      local tableIndex = RandomInt(1, #unusedSpawnIndexes)
-      local spawnIndex = unusedSpawnIndexes[tableIndex]
-      table.insert(spawnPts, spawnIndex)
-      table.remove(unusedSpawnIndexes, tableIndex)
-    end
+--      --pick random indexes from unused indexes (each spawn point index is unique)
+--     while #spawnPts < maxSpawns do
+--       local tableIndex = RandomInt(1, #unusedSpawnIndexes)
+--       local spawnIndex = unusedSpawnIndexes[tableIndex]
+--       table.insert(spawnPts, spawnIndex)
+--       table.remove(unusedSpawnIndexes, tableIndex)
+--     end
 
-    for teamID=firstTeam, lastTeam do
-      for i=1, #spawnPts do
-        local spawnIndex = spawnPts[i]
-        local spawnName = "item_spawn_" .. teamID .. "_" .. spawnIndex
-        local spawnPointEnt = Entities:FindByName(nil, spawnName)
+--     for teamID=TEAM_FIRST, TEAM_FIRST do
+--       for i=1, #spawnPts do
+--         local spawnIndex = spawnPts[i]
+--         local spawnName = "item_spawn_" .. teamID .. "_" .. spawnIndex
+--         local spawnPointEnt = Entities:FindByName(nil, spawnName)
     
-        if spawnPointEnt ~= nil then
-          --random tier based on rarity
-          local randomNum = RandomInt(1,100)
-          local tier = 1
-          if randomNum < tier3Rate then
-            tier = 3
-          elseif randomNum < tier2Rate+tier3Rate then
-            tier = 2
-          end
+--         if spawnPointEnt ~= nil then
+--           --random tier based on rarity
+--           local randomNum = RandomInt(1,100)
+--           local tier = 1
+--           if randomNum < tier3Rate then
+--             tier = 3
+--           elseif randomNum < tier2Rate+tier3Rate then
+--             tier = 2
+--           end
     
-          --mirror item spawns for each team
-          for teamID=firstTeam, lastTeam do
-            local itemName = items[itemIndex] .. tier
-            local item  = CreateItem(itemName, nil, nil)
-            if item ~= nil then
-              local point = spawnPointEnt:GetAbsOrigin()
-              CreateItemOnPositionSync(point, item)
-            else
-                print("item was not able to be created: " .. itemName)
-            end
-          end
-        else
-          print("spawn point not found: " .. spawnName)
-        end
-      end
-    end
-  end
-end
+--           --mirror item spawns for each team
+--           for teamID=TEAM_FIRST, TEAM_LAST do
+--             local itemName = items[itemIndex] .. tier
+--             local item  = CreateItem(itemName, nil, nil)
+--             if item ~= nil then
+--               local point = spawnPointEnt:GetAbsOrigin()
+--               CreateItemOnPositionSync(point, item)
+--             else
+--                 print("item was not able to be created: " .. itemName)
+--             end
+--           end
+--         else
+--           print("spawn point not found: " .. spawnName)
+--         end
+--       end
+--     end
+--   end
+-- end
 
 
 function GameSetup:RandomForNoHeroSelected()
     --NOTE: GameRules state must be in HERO_SELECTION or STRATEGY_TIME to pick heroes
     --loop through each player on every team and random a hero if they haven't picked
-  local maxPlayers = 5
-  for teamNum = DOTA_TEAM_GOODGUYS, DOTA_TEAM_BADGUYS do
-    for i=1, maxPlayers do
+  for teamNum = TEAM_FIRST, TEAM_LAST do
+    for i=1, PLAYERS_PER_TEAM do
       local playerID = PlayerResource:GetNthPlayerIDOnTeam(teamNum, i)
-      if playerID ~= nil then
+      if PlayerResource:IsValidPlayerID(playerID) then
         if not PlayerResource:HasSelectedHero(playerID) then
           local hPlayer = PlayerResource:GetPlayer(playerID)
           if hPlayer ~= nil then

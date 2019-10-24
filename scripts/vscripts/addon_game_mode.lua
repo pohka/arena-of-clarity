@@ -7,6 +7,7 @@ end
 require("game_setup")
 require("query")
 require("custom_game_state")
+require("task")
 
 
 function Precache( context )
@@ -42,7 +43,7 @@ function BattleArena:InitGameMode()
 
 	GameSetup:init()
 	CustomGameState:init()
-	
+	Task:init()
 	
 
 	ListenToGameEvent("npc_spawned", Dynamic_Wrap(self, "OnUnitSpawned"), self)
