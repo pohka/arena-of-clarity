@@ -3,3 +3,4 @@ materials/*
 particles/*
 *.cfg
 panorama/layout/*
+*.bin

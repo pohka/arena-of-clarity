@@ -8,6 +8,7 @@ require("game_setup")
 require("query")
 require("custom_game_state")
 require("task")
+require("game_time")
 
 
 function Precache( context )
@@ -42,6 +43,7 @@ function BattleArena:InitGameMode()
 	print( "BattleArena Init" )
 
 	GameSetup:init()
+	GameTime:init()
 	CustomGameState:init()
 	Task:init()
 	
@@ -56,13 +58,19 @@ function BattleArena:OnUnitSpawned( args )
 	if entH ~= nil then
 		local count = entH:GetAbilityCount()
 		if entH:IsHero() then
-
-			--add starting items
 			local hero = entH
-			if hero:HasItemInInventory("item_custom_blink") == false then
-				hero:AddItemByName("item_custom_blink")
-				hero:AddItemByName("item_shield")
-				--hero:AddItemByName("item_armor_tier_1")
+
+			local customState = CustomGameState:GetGameState()
+
+			--add warmup items
+			if customState == GAME_STATE_WARMUP then
+				if hero:HasItemInInventory("item_armor_tier_1") == false then
+					hero:AddItemByName("item_armor_tier_1")
+				end
+
+				if hero:HasItemInInventory("item_boots_tier_2") == false then
+					hero:AddItemByName("item_boots_tier_2")
+				end
 			end
 
 			--level up all abilities to max

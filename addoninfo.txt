@@ -1,3 +1,28 @@
-"AddonInfo"
+AddonInfo"
 {
+	"addonSteamAppID"				"570"
+	"addontitle"					"Arena of Clarity"
+	"addon_game_name"				"Arena of Clarity"
+	//"addonversion"					"7.17"
+	"addontagline"					"AoC"
+	"addonauthor"					"Pohka"
+	"addonauthorSteamID"			"76561198157187169"
+	"addonDescription"				"Fast Paced Battle Arena"
+	"HeroGuidesSupported"			"0"
+	"PenaltiesEnabled"				"0"
+	"CheckAFKPlayers"				"0"
+
+	"maps"						"test_map"
+
+	"IsPlayable"					"1"
+
+	"AoC_2v2"
+	{
+		"MaxPlayers"				"4"
+	}
+
+	"AoC_3v3"
+	{
+		"MaxPlayers"				"6"
+	}
 }

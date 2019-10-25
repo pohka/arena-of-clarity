@@ -1,5 +1,16 @@
 "addon"
 {
-	"addonname"										"Arena of Clarity"
+	"addonname" "Arena of Clarity"
+	"DOTA_GoodGuys"	"Left"
+	"DOTA_BadGuys"	"Right"
+	"DOTA_TOOLTIP_ABILITY_ITEM_BOOTS_TIER_1" "Boots Level 1"
+	"DOTA_TOOLTIP_ABILITY_ITEM_BOOTS_TIER_2" "Boots Level 2"
+	"DOTA_TOOLTIP_ABILITY_ITEM_BOOTS_TIER_3" "Boots Level 3"
+
+	"DOTA_TOOLTIP_ABILITY_ITEM_ARMOR_TIER_1" "Armor Level 1"
+	"DOTA_TOOLTIP_ABILITY_ITEM_ARMOR_TIER_2" "Armor Level 2"
+	"DOTA_TOOLTIP_ABILITY_ITEM_ARMOR_TIER_3" "Armor Level 3"
+
+	"DOTA_TOOLTIP_ABILITY_WRAITH_KING_Q" "Pepega Blast"
 }
 

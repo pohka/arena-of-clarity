@@ -1,8 +1,8 @@
 test_map
 {
 	material materials/overviews/test_map.vmat
-	pos_x -1472
-	pos_y 1408
-	scale 2.750
+	pos_x -7680
+	pos_y 8448
+	scale 14.250
 }
 

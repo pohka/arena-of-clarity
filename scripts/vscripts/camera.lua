@@ -23,7 +23,7 @@ function Camera:FocusHeroForAllPlayers()
     end
   end
 
-  Task:Delay(Camera.OnRemoveFocus, 0.03, {})
+  Task:Delay(Camera.OnRemoveFocus, 0.08, {})
 end
 
 function Camera:OnRemoveFocus()
