@@ -27,6 +27,7 @@ function Precache( context )
 	PrecacheResource( "particle", "particles/items3_fx/lotus_orb_shield.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/silencer/silencer_ti6/silencer_last_word_status_ti6_ring_ember.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_silencer/silencer_last_word_status_ring_ember.vpcf", context )
+	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_storm_bolt.vpcf", context )
 	
 
 	PrecacheResource( "soundfile", "soundevents/game_sounds_items.vsndevts", context )
