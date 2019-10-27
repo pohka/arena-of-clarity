@@ -3,14 +3,38 @@
 	"addonname" "Arena of Clarity"
 	"DOTA_GoodGuys"	"Left"
 	"DOTA_BadGuys"	"Right"
-	"DOTA_TOOLTIP_ABILITY_ITEM_BOOTS_TIER_1" "Boots Level 1"
-	"DOTA_TOOLTIP_ABILITY_ITEM_BOOTS_TIER_2" "Boots Level 2"
-	"DOTA_TOOLTIP_ABILITY_ITEM_BOOTS_TIER_3" "Boots Level 3"
+	"AbilityTooltip_item_boots_tier_1" "Boots Level 1"
+	"AbilityTooltip_item_boots_tier_2" "Boots Level 2"
+	"AbilityTooltip_item_boots_tier_3" "Boots Level 3"
+	"AbilityTooltip_item_boots_tier_1_description" "<font color='#F5F5F5'><b>+100</b></font>   Move Speed"
+	"AbilityTooltip_item_boots_tier_2_description" "<font color='#F5F5F5'><b>+175</b></font>   Move Speed"
+	"AbilityTooltip_item_boots_tier_3_description" "<font color='#F5F5F5'><b>+250</b></font>   Move Speed"
 
-	"DOTA_TOOLTIP_ABILITY_ITEM_ARMOR_TIER_1" "Armor Level 1"
-	"DOTA_TOOLTIP_ABILITY_ITEM_ARMOR_TIER_2" "Armor Level 2"
-	"DOTA_TOOLTIP_ABILITY_ITEM_ARMOR_TIER_3" "Armor Level 3"
+	"AbilityTooltip_item_armor_tier_1" "Armor Level 1"
+	"AbilityTooltip_item_armor_tier_2" "Armor Level 2"
+	"AbilityTooltip_item_armor_tier_3" "Armor Level 3"
+	"AbilityTooltip_item_armor_tier_1_description" "<font color='#F5F5F5'><b>+2</b></font>   Health"
+	"AbilityTooltip_item_armor_tier_2_description" "<font color='#F5F5F5'><b>+3</b></font>   Health"
+	"AbilityTooltip_item_armor_tier_3_description" "<font color='#F5F5F5'><b>+4</b></font>   Health"
 
-	"DOTA_TOOLTIP_ABILITY_WRAITH_KING_Q" "Pepega Blast"
+	"AbilityTooltip_item_custom_blink" "Blink"
+	"AbilityTooltip_item_custom_blink_description" "Instantly teleport a short distance<br><font color='#F5F5F5'><b>1200</b></font>   Range"
+	
+
+	"AbilityTooltip_wraith_king_q" "Pepega Blast"
+	"AbilityTooltip_wraith_king_r" "AoE Pepega Blast"
+
+	"AbilityTooltip_sven_q" "Storm Bolt"
+	"AbilityTooltip_sven_r" "Damage Amp"
+	"AbilityTooltip_sven_r_description" "All instances of damage get +1 damage<br><br>Duration:   <font color='#F5F5F5'><b>8.0</b></font>"
+
+	"AbilityTooltip_arrow" "Arrow"
+	"AbilityTooltip_arrow_description" "Fire an arrow in a straight line"
+
+	"AbilityTooltip_phase_shit" "Phase Shift"
+	"AbilityTooltip_phase_shit_description" "Become invulnerable for a small amount of time <br>Duration:   <font color='#F5F5F5'><b>0.7</b></font>"
+
+	"ModifierTooltip_turn_rate_modifier" "Refresh on Kill"
+	"ModifierTooltip_turn_rate_modifier_description" "Getting a kill will refresh all of your abilities and items"
 }
 

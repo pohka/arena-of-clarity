@@ -113,6 +113,8 @@ function BattleArena:OnUnitSpawned( args )
 				end
 			end
 
+			--disable hero collsion with other players
+			hero:NoUnitCollision()
 		end
 	end
 end

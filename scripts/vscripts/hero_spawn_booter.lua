@@ -4,11 +4,9 @@ LinkLuaModifier("hero_turn_rate_modifier",  LUA_MODIFIER_MOTION_NONE )
 
 function hero_spawn_booter:OnUpgrade()
  local caster = self:GetCaster()
- caster:SetBaseAgility(0)
- caster:SetBaseIntellect(0)
- caster:SetBaseStrength(0)
 
  caster:AddNewModifier(caster, self, "hero_spawn_booter_modifier", { duration = 0.03 })
+ caster:AddNewModifier(caster, self, "hero_turn_rate_modifier", { })
 end
 
 function hero_spawn_booter:OnOwnerSpawned()

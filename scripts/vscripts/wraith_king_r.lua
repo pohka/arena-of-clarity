@@ -73,3 +73,7 @@ end
 function wraith_king_r:GetAbilityType()
   return DOTA_ABILITY_TYPE_ULTIMATE
 end
+
+function wraith_king_r:GetCastRange()
+	return self:GetSpecialValueFor("radius")
+end

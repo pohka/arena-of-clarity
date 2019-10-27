@@ -1,5 +1,5 @@
 if CustomGameState == nil then
-  CustomGameState = class({})
+  _G.CustomGameState = class({})
 
   _G.GAME_STATE_WARMUP = 0
   _G.GAME_STATE_LOOT = 1

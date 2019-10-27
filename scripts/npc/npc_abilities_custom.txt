@@ -228,7 +228,6 @@
     "MaxLevel"               "1"
     "RequiredLevel"          "1"
 		
-		"AOERadius"								"%aoe_radius"
     "AbilityCastPoint"       	"0.25"
     "AbilityCastAnimation"   	"ACT_DOTA_CAST_ABILITY_1"
     "AnimationPlaybackRate"  	"1"
@@ -239,6 +238,7 @@
     "AbilityManaCost"         "0"
     "AbilityCooldown"         "5.0"
     "AbilityCastRange"        "1000"
+		"AbilityCooldown"         "4.0"
 
 		"AbilitySpecial"
 		{
@@ -287,6 +287,7 @@
     "AbilityCastPoint"       	"0.0"
     "AnimationPlaybackRate"  	"1"
     "AnimationIgnoresModelScale" "1"
+		"AbilityCooldown"         "8.0"
 
 		"AbilitySpecial"
 		{

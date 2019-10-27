@@ -14,5 +14,9 @@ end
 
 
 function hero_turn_rate_modifier:IsHidden()
-  return true
+  return false
+end
+
+function hero_turn_rate_modifier:GetTexture()
+  return "item_refresher"
 end
