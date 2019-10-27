@@ -18,7 +18,7 @@ function arrow:OnSpellStart()
 		Ability = self,
     EffectName = "particles/econ/items/mirana/mirana_crescent_arrow/mirana_spell_crescent_arrow.vpcf", --particle effect
     vSpawnOrigin = caster:GetAbsOrigin(),
-    fDistance = 2000,
+    fDistance = self:GetSpecialValueFor("max_distance"),
     fStartRadius = 64,
     fEndRadius = 64,
     Source = caster,
@@ -31,7 +31,7 @@ function arrow:OnSpellStart()
 		bDeleteOnHit = true,
 		vVelocity = direction * speed,
 		bProvidesVision = true,
-		iVisionRadius = 400,
+		iVisionRadius = self:GetSpecialValueFor("vision_radius"),
 		iVisionTeamNumber = caster:GetTeamNumber()
   }
   

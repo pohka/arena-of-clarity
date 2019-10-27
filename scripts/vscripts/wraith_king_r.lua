@@ -1,22 +1,22 @@
 wraith_king_r = class({})
 
-function wraith_king_r:OnUpgrade()
-  self.gesture = ACT_DOTA_ATTACK_EVENT
+function wraith_king_r:GetGesture()
+  return ACT_DOTA_CAST_ABILITY_3
 end
 
 function wraith_king_r:OnAbilityPhaseStart()
   local caster = self:GetCaster()
   EmitSoundOn("Hero_SkeletonKing.Reincarnate.Stinger", caster)
-  caster:StartGestureWithPlaybackRate(self.gesture, 1.6)
+  caster:StartGestureWithPlaybackRate(self:GetGesture(), 0.7)
   return true
 end
 
 function wraith_king_r:OnAbilityPhaseInterrupted()
-  self:GetCaster():RemoveGesture(self.gesture)
+  self:GetCaster():RemoveGesture(self:GetGesture())
 end
 
 function wraith_king_r:OnOwnerSpawned()
-  self:GetCaster():RemoveGesture(self.gesture)
+  self:GetCaster():RemoveGesture(self:GetGesture())
 end
 
 function wraith_king_r:OnSpellStart()
@@ -52,7 +52,7 @@ function wraith_king_r:OnSpellStart()
     projectile = ProjectileManager:CreateTrackingProjectile(info)
   end
 
-  caster:RemoveGesture(self.gesture)
+  caster:RemoveGesture(self:GetGesture())
 end
 
 function wraith_king_r:OnProjectileHit(hTarget, vLocation)

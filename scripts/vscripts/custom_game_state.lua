@@ -18,7 +18,7 @@ if CustomGameState == nil then
   _G.STATE_DURATION_POST_FIGHT_TOOLS  = 3
 
 
-  _G.ROUNDS_TO_WIN = 2
+  _G.ROUNDS_TO_WIN = 10
 end
 
 
