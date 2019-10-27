@@ -101,13 +101,15 @@
 		}
 	}
 
-	"my_arrow"
+	"arrow"
 	{
 		"BaseClass"           "ability_lua"
-		"ScriptFile"					"my_arrow"
+		"ScriptFile"					"arrow"
 
 		"AbilityBehavior"     "DOTA_ABILITY_BEHAVIOR_POINT"
 		"AbilityTextureName"     "mirana_arrow"
+		"AbilityDamage" 					"2"
+		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
 
 		"AbilitySpecial"
 		{
@@ -263,5 +265,30 @@
     "AbilityCastAnimation"   	"ACT_DOTA_CAST_ABILITY_4"
     "AnimationPlaybackRate"  	"1"
     "AnimationIgnoresModelScale" "1"
+	}
+
+	"phase_shit"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"phase_shit"
+
+    "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+    "AbilityTextureName"     "puck_phase_shift"
+    "AbilityType"            "DOTA_ABILITY_TYPE_BASIC"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+		
+    "AbilityCastPoint"       	"0.0"
+    "AnimationPlaybackRate"  	"1"
+    "AnimationIgnoresModelScale" "1"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_FLOAT"
+				"duration" 		"0.7"
+			}
+		}
 	}
 }

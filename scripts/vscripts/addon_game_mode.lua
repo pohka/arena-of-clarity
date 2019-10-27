@@ -61,8 +61,6 @@ function BattleArena:OnUnitSpawned( args )
 		if entH:IsHero() then
 			local hero = entH
 
-			
-
 			--level up all abilities to max and clear cooldowns
 			local i = 0
 			while i < 24 or i < count do
