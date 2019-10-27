@@ -12,7 +12,7 @@ function item_custom_blink:OnSpellStart()
     local castDistance = diff:Length2D()
 
     local maxRange = self:GetSpecialValueFor("max_range")
-    local penaltyRange = self:GetSpecialValueFor("penalty_range")
+    --local penaltyRange = self:GetSpecialValueFor("penalty_range")
 
     ParticleManager:CreateParticle("particles/econ/events/nexon_hero_compendium_2014/blink_dagger_end_glow_nexon_hero_cp_2014.vpcf", PATTACH_ABSORIGIN, caster)
 
@@ -22,19 +22,14 @@ function item_custom_blink:OnSpellStart()
     --move unit based on ranges
     local position = nil
     if castDistance > maxRange then
-      position = caster:GetAbsOrigin() + (direction * penaltyRange)
+      position = caster:GetAbsOrigin() + (direction * maxRange)
     else
       position = caster:GetAbsOrigin() + (direction * castDistance)
     end
 
     FindClearSpaceForUnit(caster, position, true)
 
-    --decide which sound to play
-    if castDistance <= maxRange and castDistance > penaltyRange then
-      EmitSoundOn( "DOTA_Item.BlinkDagger.NailedIt", self:GetCaster() )
-    else
-      EmitSoundOn( "DOTA_Item.BlinkDagger.Activate", self:GetCaster() )
-    end
+    EmitSoundOn("DOTA_Item.BlinkDagger.Activate", caster)
 
     --face forward
     caster:MoveToPosition(position + direction)
