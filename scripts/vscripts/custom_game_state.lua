@@ -26,6 +26,7 @@ end
 require("camera")
 require("constants")
 require("game_time")
+require("mana_potion_spawner")
 
 function CustomGameState:init()
   if IsServer() then
@@ -125,6 +126,7 @@ function CustomGameState:OnDefaultStateChange()
   if IsServer() then
     if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
       GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 1.0 )
+      ManaPotionSpawner:init()
     end
   end
 end
@@ -165,7 +167,6 @@ function CustomGameState:NextRound()
       self:OnWarmupEnd()
     end
 
-    
     --set next round
     local nextRoundNum = curRoundNum + 1
     self:SetGameState(GAME_STATE_LOOT)
@@ -178,7 +179,7 @@ function CustomGameState:NextRound()
 end
 
 function CustomGameState:OnGameStateChange( )
-  print("state change:" .. self:GetGameState())
+  --print("state change:" .. self:GetGameState())
 end
 
 function CustomGameState:OnNextRound( event )
@@ -194,6 +195,8 @@ function CustomGameState:OnNextRound( event )
     self:DestroyPhysicalItems()
     self:SpawnItems()
   end
+
+  print("Round " .. event.round .. " begin: ".. GameTime:GetTime())
 end
 
 function CustomGameState:OnWarmupEnd()
@@ -204,6 +207,7 @@ function CustomGameState:OnWarmupEnd()
     GameRules:SetHeroRespawnEnabled(false)
     GameMode:SetFixedRespawnTime(1)
     ListenToGameEvent("entity_killed", Dynamic_Wrap(self, "OnUnitKilled"), self)
+    
   end
 end
 
@@ -438,8 +442,6 @@ end
 -- spawns random items of each type in random spawn point
 -- the spawn points for each item is unique and all mirrored for each team
 function CustomGameState:SpawnItems()
-  print("spawning items")
-
   --table of items to spawn
   local items = {
     "item_boots_tier_",
@@ -478,9 +480,9 @@ function CustomGameState:SpawnItems()
       --random tier based on rarity
       local randomNum = RandomInt(1,100)
       local tier = 1
-      if randomNum < tier3Rate then
+      if randomNum <= tier3Rate then
         tier = 3
-      elseif randomNum < tier2Rate+tier3Rate then
+      elseif randomNum <= tier2Rate+tier3Rate then
         tier = 2
       end
 

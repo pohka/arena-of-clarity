@@ -31,7 +31,7 @@ function arrow:OnSpellStart()
 		bDeleteOnHit = true,
 		vVelocity = direction * speed,
 		bProvidesVision = true,
-		iVisionRadius = 500,
+		iVisionRadius = 400,
 		iVisionTeamNumber = caster:GetTeamNumber()
   }
   

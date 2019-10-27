@@ -1,11 +1,13 @@
 if Task == nil then
   Task = class({})
+  Task.list = {}
+  --auto increment task ids
+  Task.taskCounter = 0
 end
 
-Task.list = {}
 
---auto increment task ids
-Task.taskCounter = 0
+
+
 
 local TASK_DELAY = 1
 local TASK_INTERVAL = 2
@@ -32,11 +34,11 @@ function Task:Delay(func, seconds, params)
 end
 
 --calls a function repeatitivly with a delay, returns the TaskID
-function Task:Interval(func, seconds, params)
-	Task.taskCounter = Task.tasksCounter + 1
-	table.insert(Task.waitingTasks, {
+function Task:Interval(func, initalDelay, params)
+	Task.taskCounter = Task.taskCounter + 1
+	table.insert(Task.list, {
     type = TASK_INTERVAL,
-		endTime = GameRules:GetGameTime() + seconds,
+		endTime = GameRules:GetGameTime() + initalDelay,
 		func = func,
 		params = params,
 		duration = secs,
@@ -48,7 +50,7 @@ end
 
 --interupts a task and will return true if task was found with matching id
 function Task:Interupt(taskID)
-	local len = table.getn(Task.waitingTasks)
+	local len = table.getn(Task.list)
 	for i=1, #Task.list do
 		if Task.list[i].id == taskID then
 			Task.list[i].interupted = true
@@ -70,13 +72,15 @@ function Task:OnThink()
     --if function is ready to be called
     elseif Task.list[i].endTime <= now then
       --call task
-      Task.list[i].func(Task.list[i].params)
-      
+      local res = Task.list[i].func(Task.list[i].params)
+
+      --if function returns -1 then end interval
+      local IsIntervalEnded = res == nil or res < 0      
 
       --update Task.list and endTime
-      if Task.list[i].type == TASK_INTERVAL then --interval
-        Task.list[i].endTime = Task.list[i].endTime + Task.list[i].interval
-      else --delay
+      if Task.list[i].type == TASK_INTERVAL and IsIntervalEnded == false then --interval
+        Task.list[i].endTime = Task.list[i].endTime + res --Task.list[i].interval
+      else --delay or ended interval
         table.remove(Task.list, i)
         i = i-1
       end

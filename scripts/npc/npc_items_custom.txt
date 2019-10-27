@@ -258,4 +258,59 @@
 			}
 		}
   }
+
+	"item_mana_small"
+	{
+		"id" "3008"
+		"BaseClass"							"item_lua"
+		"AbilityTextureName"		"item_enchanted_mango"
+		"ScriptFile"						"item_mana_small"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"ItemStackable"					"0"
+		"ItemShareability"			"ITEM_FULLY_SHAREABLE"
+		"ItemPermanent"					"0"
+		"ItemPurchasable"				"1"
+		"ItemKillable"					"0"
+		"ItemDroppable"					"1"
+		"ItemSellable"					"0"
+		"AllowedInBackpack"			"0"
+		"Model" 								"models/props_gameplay/mango.vmdl"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"mana"				"10"
+			}
+		}
+	}
+
+	"item_mana_large"
+	{
+		"id" "3009"
+		"BaseClass"							"item_lua"
+		"AbilityTextureName"		"item_enchanted_mango"
+		"ScriptFile"						"item_mana_large"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"ItemStackable"					"0"
+		"ItemShareability"			"ITEM_FULLY_SHAREABLE"
+		"ItemPermanent"					"0"
+		"ItemPurchasable"				"1"
+		"ItemKillable"					"0"
+		"ItemDroppable"					"1"
+		"ItemSellable"					"0"
+		"AllowedInBackpack"			"0"
+		"Model" 								"models/props_gameplay/bottle_mango001.vmdl"
+		"Effect" 								"particles/econ/items/silencer/silencer_ti6/silencer_last_word_status_ti6_ring_ember.vpcf"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"mana"				"25"
+			}
+		}
+	}
 }

@@ -21,6 +21,8 @@ function Precache( context )
 	]]
 
 	PrecacheResource( "model", "models/props_gameplay/boots_of_speed.vmdl", context )
+	PrecacheResource( "model", "models/props_gameplay/mango.vmdl", context )
+	PrecacheResource( "model", "models/props_gameplay/bottle_mango001.vmdl", context )
 
 	PrecacheResource( "particle", "particles/econ/items/mirana/mirana_crescent_arrow/mirana_spell_crescent_arrow.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf", context )
@@ -28,6 +30,9 @@ function Precache( context )
 	PrecacheResource( "particle", "particles/econ/items/silencer/silencer_ti6/silencer_last_word_status_ti6_ring_ember.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_silencer/silencer_last_word_status_ring_ember.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_storm_bolt.vpcf", context )
+	PrecacheResource( "particle", "particles/status_fx/status_effect_gods_strength.vpcf", context )
+	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_gods_strength.vpcf", context )
+	
 	
 
 	PrecacheResource( "soundfile", "soundevents/game_sounds_items.vsndevts", context )
@@ -35,6 +40,8 @@ function Precache( context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_sven.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/soundevents/game_sounds_heroes/game_sounds_skeleton_king.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts", context )
+	
+	
 end
 
 -- Create the game mode when we activate
@@ -45,7 +52,7 @@ end
 
 
 function BattleArena:InitGameMode()
-	print( "BattleArena Init" )
+	print( "BattleArena InitGameMode" )
 
 	GameSetup:init()
 	GameTime:init()

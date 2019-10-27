@@ -7,7 +7,6 @@ require("task")
 
 --move all players camera to their hero
 function Camera:FocusHeroForAllPlayers()
-  print("startingID" .. TEAM_FIRST .. "-" .. TEAM_LAST)
   for teamID=TEAM_FIRST, TEAM_LAST do
     for i=1, PLAYERS_PER_TEAM do
       local playerID = PlayerResource:GetNthPlayerIDOnTeam(teamID, i)

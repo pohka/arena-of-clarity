@@ -93,12 +93,15 @@ function Filters:AddInventroyFilter()
               end
             end --end of item loop
           end
+
+          --custom event for consume on item pickup
+          if item.IsConsumedOnPickup ~= nil and item:IsConsumedOnPickup() then
+            item:OnConsume(unit)
+            return false
+          end
         end
 
-        --this event is broken in dota, so calling it from here instead
-        if item.OnItemEquipped ~= nil then
-          item:OnItemEquipped(item)
-        end
+        
         return true
       end
     end,
