@@ -61,28 +61,54 @@ function BattleArena:OnUnitSpawned( args )
 		if entH:IsHero() then
 			local hero = entH
 
-			local customState = CustomGameState:GetGameState()
+			
 
-			--add warmup items
-			if customState == GAME_STATE_WARMUP then
-				if hero:HasItemInInventory("item_armor_tier_1") == false then
-					hero:AddItemByName("item_armor_tier_1")
-				end
-
-				if hero:HasItemInInventory("item_boots_tier_2") == false then
-					hero:AddItemByName("item_boots_tier_2")
-				end
-			end
-
-			--level up all abilities to max
+			--level up all abilities to max and clear cooldowns
 			local i = 0
 			while i < 24 or i < count do
 				local abil = hero:GetAbilityByIndex(i)
 				if abil ~= nil then
 					local maxLevel = abil:GetMaxLevel()
 					abil:SetLevel(maxLevel);
+					abil:EndCooldown()
 				end
 				i = i + 1
+			end
+
+			--remove all modifiers (except ignored modifiers)
+			local ignoreModifiers = {
+				"hero_spawn_booter_modifier"
+			}
+			for n=0, hero:GetModifierCount() - 1 do
+				local modifierName = hero:GetModifierNameByIndex(n)
+				local a=1
+				local isMatchingIgnore = false
+				while a <= #ignoreModifiers and isMatchingIgnore == false do
+					if ignoreModifiers[a] == modifierName then
+						isMatchingIgnore = true
+					end
+					a = a + 1
+				end
+
+				if isMatchingIgnore == false then
+					hero:RemoveModifierByName(modifierName)
+				end
+			end
+
+			--add warmup items
+			local customState = CustomGameState:GetGameState()
+			if customState == GAME_STATE_WARMUP then
+				local warmupItems = {
+					"item_armor_tier_1",
+					"item_boots_tier_2",
+					"item_custom_blink"
+				}
+
+				for i=1, #warmupItems do
+					if hero:HasItemInInventory(warmupItems[i]) == false then
+						hero:AddItemByName(warmupItems[i])
+					end
+				end
 			end
 		end
 	end

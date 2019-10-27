@@ -204,7 +204,7 @@
 		}
 	}
 
-		"sven_q"
+	"sven_q"
 	{
 		// General  
     // ----------------------------------------------------------------------------------------
@@ -246,5 +246,22 @@
 				"aoe" 		"250"
 			}
 		}
+	}
+
+	"sven_r"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"sven_r"
+
+    "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+    "AbilityTextureName"     "sven_gods_strength"
+    "AbilityType"            "DOTA_ABILITY_TYPE_ULTIMATE"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+		
+    "AbilityCastPoint"       	"0.0"
+    "AbilityCastAnimation"   	"ACT_DOTA_CAST_ABILITY_4"
+    "AnimationPlaybackRate"  	"1"
+    "AnimationIgnoresModelScale" "1"
 	}
 }

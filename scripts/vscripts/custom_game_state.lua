@@ -188,7 +188,9 @@ function CustomGameState:OnNextRound( event )
     Say(nil, str, true)
     print(str)
 
-    self:ClearAllPlayersInventory()
+    self:ClearAllPlayersInventory({
+      "item_custom_blink"
+    })
     self:DestroyPhysicalItems()
     self:SpawnItems()
   end
@@ -489,7 +491,7 @@ function CustomGameState:SpawnItems()
   end
 end
 
-function CustomGameState:ClearAllPlayersInventory()
+function CustomGameState:ClearAllPlayersInventory( ignore )
   for teamID=TEAM_FIRST, TEAM_LAST do
     for i=1, PLAYERS_PER_TEAM do
       local playerID = PlayerResource:GetNthPlayerIDOnTeam(teamID, i)
@@ -501,7 +503,19 @@ function CustomGameState:ClearAllPlayersInventory()
             for a=DOTA_ITEM_SLOT_1, DOTA_STASH_SLOT_6 do
               local item = hero:GetItemInSlot(a)
               if item ~= nil then
-                hero:RemoveItem(item)
+                if ignore ~= nil then
+                  local isMatchingIgnore = false
+                  for i=1, #ignore do
+                    if ignore[i] == item:GetName() then
+                      isMatchingIgnore = true
+                    end
+                  end
+                  if isMatchingIgnore == false then
+                    hero:RemoveItem(item)
+                  end
+                else
+                  hero:RemoveItem(item)
+                end
               end
             end
           end

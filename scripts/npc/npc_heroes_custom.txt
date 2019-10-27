@@ -58,7 +58,7 @@
 		"Ability3"						""
 		"Ability4"						""
 		"Ability5"						"hero_spawn_booter"
-		"Ability6"						""
+		"Ability6"						"sven_r"
 		"Ability7"						""
 		"Ability8"						""
 		"Ability9"						""
