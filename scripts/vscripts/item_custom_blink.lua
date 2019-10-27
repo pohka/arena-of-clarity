@@ -20,13 +20,14 @@ function item_custom_blink:OnSpellStart()
     ProjectileManager:ProjectileDodge(caster)
 
     --move unit based on ranges
+    local position = nil
     if castDistance > maxRange then
-      local position = caster:GetAbsOrigin() + (direction * penaltyRange)
-      FindClearSpaceForUnit(caster, position, true)
+      position = caster:GetAbsOrigin() + (direction * penaltyRange)
     else
-      local position = caster:GetAbsOrigin() + (direction * castDistance)
-      FindClearSpaceForUnit(caster, position, true)
+      position = caster:GetAbsOrigin() + (direction * castDistance)
     end
+
+    FindClearSpaceForUnit(caster, position, true)
 
     --decide which sound to play
     if castDistance <= maxRange and castDistance > penaltyRange then
@@ -34,5 +35,12 @@ function item_custom_blink:OnSpellStart()
     else
       EmitSoundOn( "DOTA_Item.BlinkDagger.Activate", self:GetCaster() )
     end
+
+    --face forward
+    caster:MoveToPosition(position + direction)
   end
+end
+
+function item_custom_blink:GetCastRange()
+  return self:GetSpecialValueFor("max_range")
 end

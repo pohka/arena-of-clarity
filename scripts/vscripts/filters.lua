@@ -5,6 +5,7 @@ end
 function Filters:AddAll()
   Filters:AddXPFilter()
   Filters:AddInventroyFilter()
+  Filters:AddDamageFilter()
 end
 
 function Filters:AddXPFilter()
@@ -102,4 +103,25 @@ function Filters:AddInventroyFilter()
       end
     end,
 		self)
+end
+
+function Filters:AddDamageFilter()
+  local GameMode = GameRules:GetGameModeEntity()
+  GameMode:SetDamageFilter(
+    function(ctx, event)
+      --damage
+      --entindex_inflictor_const (ability or modifier)
+      --entindex_victim_const
+      --entindex_attacker_const
+
+      local attacker = EntIndexToHScript(event.entindex_attacker_const)
+      if attacker ~= nil then
+        local mana = event.damage * 7
+        attacker:GiveMana(mana)
+      end
+
+      return true
+    end,
+    self
+  )
 end

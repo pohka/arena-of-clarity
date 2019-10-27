@@ -58,3 +58,8 @@ function sven_q:OnProjectileHit(hTarget, vLocation)
     EmitSoundOn( "Hero_Sven.StormBoltImpact", hTarget )
   end
 end
+
+
+function sven_q:GetAOERadius()
+	return self:GetSpecialValueFor("aoe_radius")
+end

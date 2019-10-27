@@ -36,5 +36,7 @@ function wraith_king_q:OnProjectileHit(hTarget, vLocation)
     }
     
     ApplyDamage(damageTable)
+
+    EmitSoundOn("Hero_SkeletonKing.Hellfire_BlastImpact", hTarget)
   end
 end

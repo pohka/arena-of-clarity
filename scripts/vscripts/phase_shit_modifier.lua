@@ -12,16 +12,18 @@ end
 function phase_shit_modifier:OnCreated()
   if IsServer() then
     local unit = self:GetParent()
-    unit:SetMoveCapability(DOTA_UNIT_CAP_MOVE_NONE)
-    unit:SetModelScale(0)
+    --unit:SetMoveCapability(DOTA_UNIT_CAP_MOVE_NONE)
+    unit:SetModelScale(0.05)
+    EmitSoundOn("Hero_Puck.Phase_Shift", unit)
   end
 end
 
 function phase_shit_modifier:OnDestroy()
   if IsServer() then
     local unit = self:GetParent()
-    unit:SetMoveCapability(DOTA_UNIT_CAP_MOVE_GROUND)
+    --unit:SetMoveCapability(DOTA_UNIT_CAP_MOVE_GROUND)
     unit:SetModelScale(1.0)
+    StopSoundEvent("Hero_Puck.Phase_Shift", unit)
   end
 end
 

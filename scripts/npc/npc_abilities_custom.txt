@@ -110,6 +110,11 @@
 		"AbilityTextureName"     "mirana_arrow"
 		"AbilityDamage" 					"2"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
+		"MaxLevel"               "1"
+    "RequiredLevel"          "1"
+		"AbilityCastPoint"       "0.0"
+		"AbilityManaCost"         "0"
+    "AbilityCooldown"         "5.0"
 
 		"AbilitySpecial"
 		{
@@ -223,7 +228,7 @@
     "MaxLevel"               "1"
     "RequiredLevel"          "1"
 		
-		"AOERadius"								"%aoe"
+		"AOERadius"								"%aoe_radius"
     "AbilityCastPoint"       	"0.25"
     "AbilityCastAnimation"   	"ACT_DOTA_CAST_ABILITY_1"
     "AnimationPlaybackRate"  	"1"
@@ -245,7 +250,7 @@
 			"02"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"aoe" 		"250"
+				"aoe_radius" 		"250"
 			}
 		}
 	}
@@ -265,6 +270,7 @@
     "AbilityCastAnimation"   	"ACT_DOTA_CAST_ABILITY_4"
     "AnimationPlaybackRate"  	"1"
     "AnimationIgnoresModelScale" "1"
+		"AbilityManaCost"         "100"
 	}
 
 	"phase_shit"
@@ -272,8 +278,8 @@
 		"BaseClass"           "ability_lua"
 		"ScriptFile"					"phase_shit"
 
-    "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
     "AbilityTextureName"     "puck_phase_shift"
+    "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
     "AbilityType"            "DOTA_ABILITY_TYPE_BASIC"
     "MaxLevel"               "1"
     "RequiredLevel"          "1"
@@ -288,6 +294,40 @@
 			{
 				"var_type" 	"FIELD_FLOAT"
 				"duration" 		"0.7"
+			}
+		}
+	}
+
+	"wraith_king_r"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"wraith_king_r"
+
+		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+    "AbilityTextureName"     "skeleton_king_reincarnation"
+    "AbilityType"            "DOTA_ABILITY_TYPE_ULTIMATE"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+
+		"AbilityCastRange"        "%radius"
+		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
+		"AbilityDamage" 					"2"
+		"AbilityManaCost"         "100"
+
+		"AbilityCastPoint"       	"0.2"
+    "AnimationIgnoresModelScale" "1"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"projectile_speed" 		"600"
+			}
+			"02"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"radius" 		"700"
 			}
 		}
 	}

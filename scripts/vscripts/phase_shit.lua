@@ -7,7 +7,16 @@ function phase_shit:OnSpellStart()
     caster,
     self,
     "phase_shit_modifier",
-    { duration =  self:GetSpecialValueFor("duration") }
+    {}
   )
   ProjectileManager:ProjectileDodge(caster)
+end
+
+function phase_shit:OnChannelFinish(interupted)
+  local caster = self:GetCaster()
+  caster:RemoveModifierByName("phase_shit_modifier")
+end
+
+function phase_shit:GetChannelTime()
+  return self:GetSpecialValueFor("duration")
 end

@@ -208,6 +208,13 @@ function CustomGameState:OnWarmupEnd()
 end
 
 function CustomGameState:OnUnitKilled( args )
+  -- args:
+  -- entindex_inflictor
+  -- damagebits
+  -- entindex_killed
+  -- entindex_attacker
+  -- splitscreenplayer
+
   if IsServer() then
     local state = self:GetGameState()
 
@@ -216,9 +223,30 @@ function CustomGameState:OnUnitKilled( args )
 
       if killedUnit ~= nil then
         if killedUnit:IsHero() then
-          print("killed hero:" .. killedUnit:GetName())
           killedUnit:GetTeamNumber()
+          
+          --give attacker mana
+          local attacker = EntIndexToHScript(args.entindex_attacker)
+          if attacker ~= nil then
+            attacker:GiveMana(50)
 
+            --refresh all of attacker's items and spells
+            for i=0, attacker:GetAbilityCount()-1 do
+              local abil = attacker:GetAbilityByIndex(i)
+              if abil ~= nil then
+                abil:EndCooldown()
+              end
+            end
+
+            for i=DOTA_ITEM_SLOT_1, DOTA_ITEM_SLOT_6 do
+              local item = attacker:GetItemInSlot(i)
+              if item ~= nil then
+                item:EndCooldown()
+              end
+            end
+          end
+
+          --check for round victory condition
           -- Find all alive unit
           local allUnitsAlive = FindUnitsInRadius(
             killedUnit:GetTeamNumber(),

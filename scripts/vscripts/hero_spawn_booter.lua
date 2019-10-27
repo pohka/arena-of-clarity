@@ -8,7 +8,7 @@ function hero_spawn_booter:OnUpgrade()
  caster:SetBaseIntellect(0)
  caster:SetBaseStrength(0)
 
- caster:AddNewModifier(caster, self, "hero_spawn_booter_modifier", { duration = 1.0 })
+ caster:AddNewModifier(caster, self, "hero_spawn_booter_modifier", { duration = 0.03 })
 end
 
 function hero_spawn_booter:OnOwnerSpawned()

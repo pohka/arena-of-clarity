@@ -1,5 +1,6 @@
 arrow = class({})
 
+
 function arrow:OnSpellStart()
   local caster = self:GetCaster()
   --A Liner Projectile must have a table with projectile info
@@ -36,6 +37,8 @@ function arrow:OnSpellStart()
   
 
   ProjectileManager:CreateLinearProjectile(info)
+
+  EmitSoundOn("Hero_Mirana.ArrowCast", caster)
 end
 
 function arrow:OnProjectileHit(hTarget, vLocation)
@@ -49,6 +52,8 @@ function arrow:OnProjectileHit(hTarget, vLocation)
       damage_type = self:GetAbilityDamageType(),
       ability = self
     })
+
+    EmitSoundOn("Hero_Mirana.ArrowImpact", hTarget)
   end
 
   return true

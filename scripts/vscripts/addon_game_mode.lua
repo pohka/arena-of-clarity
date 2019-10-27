@@ -31,6 +31,10 @@ function Precache( context )
 	
 
 	PrecacheResource( "soundfile", "soundevents/game_sounds_items.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_puck.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_sven.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/soundevents/game_sounds_heroes/game_sounds_skeleton_king.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts", context )
 end
 
 -- Create the game mode when we activate
@@ -108,6 +112,7 @@ function BattleArena:OnUnitSpawned( args )
 					end
 				end
 			end
+
 		end
 	end
 end
