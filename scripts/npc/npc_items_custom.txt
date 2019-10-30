@@ -276,7 +276,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"mana"				"10"
+				"mana"				"20"
 			}
 		}
 	}
@@ -304,7 +304,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"mana"				"25"
+				"mana"				"45"
 			}
 		}
 	}

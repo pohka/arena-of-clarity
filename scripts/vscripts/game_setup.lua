@@ -57,18 +57,23 @@ function GameSetup:init()
     --listen to game state event
     ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(self, "OnStateChange"), self)
 
-    GameRules:SetUseUniversalShopMode(true)
+    --GameRules:SetUseUniversalShopMode(true)
+
+    --disable shop
+    GameMode:SetRecommendedItemsDisabled(true)
+    GameMode:SetStashPurchasingDisabled(true)
     
     
   --=================================
   --RELEASE BUILD
   --=================================
   else 
-    GameRules:SetHeroSelectionTime(30)
+    GameRules:SetCustomGameSetupAutoLaunchDelay(120)
+    GameRules:SetHeroSelectionTime(45)
     GameRules:SetStrategyTime(0)
     GameRules:SetPreGameTime(0)
     GameRules:SetShowcaseTime(0)
-    GameRules:SetPostGameTime(5)
+    GameRules:SetPostGameTime(7)
 
     --disable some setting which are annoying then testing
     local GameMode = GameRules:GetGameModeEntity()
@@ -92,6 +97,14 @@ function GameSetup:init()
     --GameRules:SetHeroRespawnEnabled(false)
     GameMode:SetBuybackEnabled(false)
     GameMode:SetFixedRespawnTime(3)
+
+    for teamID=TEAM_FIRST, TEAM_LAST do
+      GameRules:SetCustomGameTeamMaxPlayers(teamID, PLAYERS_PER_TEAM)
+    end
+
+    --disable shop
+    GameMode:SetRecommendedItemsDisabled(true)
+    GameMode:SetStashPurchasingDisabled(true)
     
     --listen to game state event
     ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(self, "OnStateChange"), self)

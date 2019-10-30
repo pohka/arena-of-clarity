@@ -117,9 +117,11 @@ function Filters:AddDamageFilter()
       --entindex_victim_const
       --entindex_attacker_const
 
+      local manaPerDamage = 15
+
       local attacker = EntIndexToHScript(event.entindex_attacker_const)
       if attacker ~= nil then
-        local mana = event.damage * 7
+        local mana = event.damage * manaPerDamage
         attacker:GiveMana(mana)
       end
 
