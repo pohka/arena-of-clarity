@@ -117,11 +117,28 @@ function Filters:AddDamageFilter()
       --entindex_victim_const
       --entindex_attacker_const
 
-      local manaPerDamage = 15
-
       local attacker = EntIndexToHScript(event.entindex_attacker_const)
+      local victim = EntIndexToHScript(event.entindex_victim_const)
+      event.damage = math.floor(event.damage)
+      
       if attacker ~= nil then
-        local mana = event.damage * manaPerDamage
+        if attacker:HasModifier("sven_r_modifier") then
+          event.damage = event.damage + 1
+        end
+      end
+
+      --calc mana to give to player, dont give mana for damage after hp is zero
+      -- e.g. unit at 2hp and takes 3 damage => 2*manaPerDamage
+      local damageToUnit = event.damage
+      if victim ~= nil then
+        if damageToUnit > victim:GetHealth() then
+          damageToUnit = victim:GetHealth()
+        end
+      end
+
+      local manaPerDamage = 15
+      if attacker ~= nil then
+        local mana =  damageToUnit * manaPerDamage
         attacker:GiveMana(mana)
       end
 

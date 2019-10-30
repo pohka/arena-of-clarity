@@ -1,11 +1,6 @@
 if CustomGameState == nil then
   _G.CustomGameState = class({})
 
-  _G.GAME_STATE_WARMUP = 0
-  _G.GAME_STATE_LOOT = 1
-  _G.GAME_STATE_FIGHT = 2
-  _G.GAME_STATE_POST_FIGHT = 3
-  _G.GAME_STATE_POST_GAME = 4
 
   _G.STATE_DURATION_WARMUP = 60
   _G.STATE_DURATION_LOOT = 1
@@ -194,6 +189,9 @@ function CustomGameState:OnNextRound( event )
     })
     self:DestroyPhysicalItems()
     self:SpawnItems()
+    
+    
+    --CustomProjectileManager:DestroyAll()
   end
 
   print("Round " .. event.round .. " begin: ".. GameTime:GetTime())
@@ -566,3 +564,4 @@ function CustomGameState:DestroyPhysicalItems()
     end
   end
 end
+

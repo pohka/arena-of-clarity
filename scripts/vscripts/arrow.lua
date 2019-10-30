@@ -1,5 +1,7 @@
 arrow = class({})
 
+require("constants")
+
 
 function arrow:OnSpellStart()
   local caster = self:GetCaster()
