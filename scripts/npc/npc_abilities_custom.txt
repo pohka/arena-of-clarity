@@ -107,7 +107,7 @@
 		"ScriptFile"					"arrow"
 
 		"AbilityBehavior"     "DOTA_ABILITY_BEHAVIOR_POINT"
-		"AbilityTextureName"     "mirana_arrow"
+		"AbilityTextureName"     "bounty_hunter_shuriken_toss"
 		"AbilityDamage" 					"2"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
 		"MaxLevel"               "1"

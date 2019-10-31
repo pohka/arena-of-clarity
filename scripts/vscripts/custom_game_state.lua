@@ -22,6 +22,7 @@ require("camera")
 require("constants")
 require("game_time")
 require("mana_potion_spawner")
+require("brew_projectile")
 
 function CustomGameState:init()
   if IsServer() then
@@ -189,9 +190,7 @@ function CustomGameState:OnNextRound( event )
     })
     self:DestroyPhysicalItems()
     self:SpawnItems()
-    
-    
-    --CustomProjectileManager:DestroyAll()
+    BrewProjectile:RemoveAllProjectiles()
   end
 
   print("Round " .. event.round .. " begin: ".. GameTime:GetTime())
@@ -303,6 +302,8 @@ function CustomGameState:SetRoundWinner( teamIDWinner )
         if teamIDWinner == DOTA_TEAM_BADGUYS then
           teamName = "Right Team"
         end
+
+        BrewProjectile:RemoveAllProjectiles()
 
         if newTeamScore == ROUNDS_TO_WIN then
           self:SetVictory(teamIDWinner)

@@ -9,6 +9,7 @@ require("query")
 require("custom_game_state")
 require("task")
 require("game_time")
+require("brew_projectile")
 
 
 function Precache( context )
@@ -23,6 +24,7 @@ function Precache( context )
 	PrecacheResource( "model", "models/props_gameplay/boots_of_speed.vmdl", context )
 	PrecacheResource( "model", "models/props_gameplay/mango.vmdl", context )
 	PrecacheResource( "model", "models/props_gameplay/bottle_mango001.vmdl", context )
+	
 
 	PrecacheResource( "particle", "particles/econ/items/mirana/mirana_crescent_arrow/mirana_spell_crescent_arrow.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf", context )
@@ -32,6 +34,10 @@ function Precache( context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_storm_bolt.vpcf", context )
 	PrecacheResource( "particle", "particles/status_fx/status_effect_gods_strength.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_gods_strength.vpcf", context )
+	PrecacheResource( "particle", "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf", context )
+
+
+	
 	
 	
 
@@ -58,6 +64,7 @@ function BattleArena:InitGameMode()
 	GameTime:init()
 	CustomGameState:init()
 	Task:init()
+	BrewProjectile:init()
 	
 
 	ListenToGameEvent("npc_spawned", Dynamic_Wrap(self, "OnUnitSpawned"), self)
