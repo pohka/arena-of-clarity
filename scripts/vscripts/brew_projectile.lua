@@ -2,15 +2,15 @@
 
 if BrewProjectile == nil then
  _G.BrewProjectile = class({})
- _G.BrewProjectile.data = {}
- _G.BrewProjectile.counter = 0
- _G.BrewProjectile.lastThinkTime = 0.0
+ BrewProjectile.data = {}
+ BrewProjectile.counter = 0
+ BrewProjectile.lastThinkTime = 0.0
 end
 
 
 require("game_time")
 require("task")
-
+require("constants")
 
 function BrewProjectile:init()
   BrewProjectile.lastThinkTime = GameTime:GetTime()
@@ -27,8 +27,20 @@ function BrewProjectile:OnUnitKilled( args )
   -- splitscreenplayer
 
  for id, proj in pairs(BrewProjectile.data) do
-  if proj.deleteOnOwnerKilled and proj.owner:entindex() == args.entindex_killed then
-    self:RemoveProjectile(id)
+  if proj.type == PROJECTILE_TYPE_LINEAR then
+    --remove all owned linear projectiles if deleteOnOwnerKilled == true
+    if proj.deleteOnOwnerKilled and proj.owner ~= nil and proj.owner:entindex() == args.entindex_killed then
+      self:RemoveProjectile(id)
+    end
+  elseif proj.type == PROJECTILE_TYPE_TRACKING then
+    local removeIDs = {}
+    --remove all owned tracking projectiles if deleteOnOwnerKilled == true
+    if proj.deleteOnOwnerKilled and proj.owner ~= nil and proj.owner:entindex() == args.entindex_killed then
+      self:RemoveProjectile(id)
+    --if target died, remove all tracking projectiles targeting them
+    elseif proj.target ~= nil and proj.target:entindex() == args.entindex_killed then
+      self:RemoveProjectile(id)
+    end
   end
  end
 end
@@ -41,21 +53,30 @@ end
   spawnOrigin,
   radius,
   effect, --particle effect string path
-  deleteOnHit, --optional (default is true)
-  deleteOnOwnerKilled, --option (default is false)
-  providesVision, --optional (false by default)
+  attachType, --optional (default = PATTACH_ABSORIGIN_FOLLOW)
+  deleteOnHit, --optional (default = true)
+  deleteOnOwnerKilled, --option (default = false)
+  providesVision, --optional (false = default)
   visionRadius, --only used if provides vision is true
-  unitTargetTeam, --optional (DOTA_UNIT_TARGET_TEAM_ENEMY by default)
-  unitTargetType, --optional (DOTA_UNIT_TARGET_ALL by default)
-  unitTargetFlags, --optional (DOTA_UNIT_TARGET_FLAG_NONE by default)
-  groundHeight, -- optional (100 by default)
+  unitTargetTeam, --optional (DOTA_UNIT_TARGET_TEAM_ENEMY = default)
+  unitTargetType, --optional (DOTA_UNIT_TARGET_ALL = default)
+  unitTargetFlags, --optional (DOTA_UNIT_TARGET_FLAG_NONE = default)
+  groundHeight, -- optional (100 = default)
   maxDistance, --optional
   maxDuration --optional
 ]]
 function BrewProjectile:CreateLinearProjectile(info)
   info.teamID = info.owner:GetTeam()
   local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, info.teamID)
-  ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
+
+  --attach particle effect
+  if info.attachType == nil then
+    ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
+  else
+    ParticleManager:CreateParticle(info.effect, info.attachType, dummy)
+  end
+  info.attachType = nil
+  
   
   --set default values
 
@@ -102,7 +123,7 @@ function BrewProjectile:CreateLinearProjectile(info)
     info.deleteOnOwnerKilled = false
   end
 
-  
+  info.type = PROJECTILE_TYPE_LINEAR
 
   local id = BrewProjectile.counter
   BrewProjectile.counter = BrewProjectile.counter + 1
@@ -135,57 +156,81 @@ function BrewProjectile:OnThink()
     
       local dummy = EntIndexToHScript(proj.entindex)
       if dummy ~= nil then
-        --move projectile dummy
-        local pos = dummy:GetAbsOrigin() + (proj.direction * proj.speed * delta)
-        pos.z =  GetGroundHeight(pos, dummy) + proj.groundHeight
-        dummy:SetAbsOrigin(pos)
-        local projZ = pos.z
+        --LINEAR 
+        if proj.type == PROJECTILE_TYPE_LINEAR then
+          --move projectile dummy
+          local pos = dummy:GetAbsOrigin() + (proj.direction * proj.speed * delta)
+          pos.z =  GetGroundHeight(pos, dummy) + proj.groundHeight
+          dummy:SetAbsOrigin(pos)
+          local projZ = pos.z
 
-        --check if reached max distance
-        local isRemoved = false
-        if proj.maxDistance ~= nil then
-          local diff = dummy:GetAbsOrigin() - proj.spawnOrigin
-          local curDistanceTraveled = diff:Length2D()
-          if curDistanceTraveled > proj.maxDistance then
-            table.insert(removedIDs, id)
-            isRemoved = true
+          --check if reached max distance
+          local isRemoved = false
+          if proj.maxDistance ~= nil then
+            local diff = dummy:GetAbsOrigin() - proj.spawnOrigin
+            local curDistanceTraveled = diff:Length2D()
+            if curDistanceTraveled > proj.maxDistance then
+              table.insert(removedIDs, id)
+              isRemoved = true
+            end
           end
-        end
 
-        if isRemoved == false then
-          --check if hit target
-          local units = FindUnitsInRadius(
-            proj.teamID,
-            pos,
-            nil,
-            proj.radius,
-            proj.unitTargetTeam,
-            proj.unitTargetType,
-            proj.unitTargetFlags,
-            FIND_ANY_ORDER,
-            false
-          )
+          if isRemoved == false then
+            --check if hit target
+            local units = FindUnitsInRadius(
+              proj.teamID,
+              pos,
+              nil,
+              proj.radius,
+              proj.unitTargetTeam,
+              proj.unitTargetType,
+              proj.unitTargetFlags,
+              FIND_ANY_ORDER,
+              false
+            )
 
-          local hasFoundTarget = false
-          for _,target in pairs(units) do
-            if hasFoundTarget == false then
-              --check z-axis
-              local targetPos = target:GetAbsOrigin()
-              if targetPos.z - projZ < 1000 then
-                hasFoundTarget = true
-                
-                if proj.ability.OnBrewProjectileHit ~= nil then
-                  proj.ability:OnBrewProjectileHit(target, dummy:GetAbsOrigin())
-                end
+            local hasFoundTarget = false
+            for _,target in pairs(units) do
+              if hasFoundTarget == false then
+                --check z-axis
+                local targetPos = target:GetAbsOrigin()
+                if targetPos.z - projZ < 1000 then
+                  hasFoundTarget = true
+                  
+                  if proj.ability.OnBrewProjectileHit ~= nil then
+                    proj.ability:OnBrewProjectileHit(target, dummy:GetAbsOrigin())
+                  end
 
-                if proj.deleteOnHit == true then
-                  table.insert(removedIDs, id)
+                  if proj.deleteOnHit == true then
+                    table.insert(removedIDs, id)
+                  end
                 end
               end
             end
           end
+
+         --TRACKING
+        elseif proj.type == PROJECTILE_TYPE_TRACKING then
+          local targetPos = proj.target:GetAbsOrigin()
+          
+          --move dummy
+          local direction = targetPos - dummy:GetAbsOrigin()
+          direction.z = 0
+          direction = direction:Normalized()
+          local nextPos = dummy:GetAbsOrigin() + (direction * proj.speed * delta)
+          nextPos.z =  GetGroundHeight(nextPos, dummy) + proj.groundHeight
+          dummy:SetAbsOrigin(nextPos)
+
+          --check if hitting target
+          local dist = (targetPos - nextPos):Length2D()
+          if dist < proj.radius then
+            if proj.ability.OnBrewProjectileHit ~= nil then
+              proj.ability:OnBrewProjectileHit(proj.target, nextPos)
+            end
+
+            table.insert(removedIDs, id)
+          end
         end
-        
       end
     end
   end
@@ -225,7 +270,84 @@ function BrewProjectile:RemoveAllProjectiles()
   end
 end
 
-
+--[[
+  target,
+  owner,
+  ability,
+  effect,
+  attachType,
+  speed,
+  radius, --optional (default = 64)
+  isDodgeable,
+  maxDuration,
+  providesVision,
+  visionRadius,
+  groundHeight, --optional (default = 100)
+  deleteOnOwnerKilled
+]]
 function BrewProjectile:CreateTrackingProjectile(info)
 
+  local proj = {}
+  proj.teamID = info.owner:GetTeam()
+  local dummy = CreateUnitByName("dummy_unit", info.owner:GetAbsOrigin(), true, nil, nil, proj.teamID)
+
+   --attach particle effect
+  if info.attachType == nil then
+    ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
+  else
+    ParticleManager:CreateParticle(info.effect, info.attachType, dummy)
+  end
+  
+  proj.entindex = dummy:entindex()
+  proj.target = info.target
+  proj.owner = info.owner
+  proj.ability = info.ability
+  proj.speed = info.speed
+  proj.isDodgeable = info.isDodgeable
+  proj.endTime = GameTime:GetTime() + info.maxDuration
+  proj.deleteOnOwnerKilled = info.deleteOnOwnerKilled
+  
+  if info.radius == nil then
+    proj.radius = 64
+  else
+    proj.radius = info.radius
+  end
+
+  if info.providesVision == nil then
+    proj.providesVision = false
+  else
+    proj.providesVision = info.providesVision
+  end
+
+  if proj.providesVision and info.visionRadius ~= nil then
+    dummy:SetDayTimeVisionRange(info.visionRadius)
+  end
+
+  if info.groundHeight == nil then
+    proj.groundHeight = 100
+  else
+    proj.groundHeight = info.groundHeight
+  end
+  
+
+  proj.type = PROJECTILE_TYPE_TRACKING
+  local id = BrewProjectile.counter
+  BrewProjectile.counter = BrewProjectile.counter + 1
+  self.data[id] = proj
+
+end
+
+function BrewProjectile:Dodge(unit)
+  local removedIDs = {}
+  for id, proj in pairs(self.data) do
+    if proj.type == PROJECTILE_TYPE_TRACKING and proj.isDodgeable then
+      if proj.target ~= nil and proj.target:entindex() == unit:entindex() then
+        table.insert(removedIDs, id)
+      end
+    end
+  end
+
+  for i=1, #removedIDs do
+    self:RemoveProjectile(removedIDs[i])
+  end
 end

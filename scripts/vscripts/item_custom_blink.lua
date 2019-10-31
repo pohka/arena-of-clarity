@@ -1,5 +1,7 @@
 item_custom_blink = class({})
 
+require("brew_projectile")
+
 function item_custom_blink:OnSpellStart()
   local caster = self:GetCaster()
   local point = self:GetCursorPosition()
@@ -17,7 +19,7 @@ function item_custom_blink:OnSpellStart()
     ParticleManager:CreateParticle("particles/econ/events/nexon_hero_compendium_2014/blink_dagger_end_glow_nexon_hero_cp_2014.vpcf", PATTACH_ABSORIGIN, caster)
 
     --dodge projectile
-    ProjectileManager:ProjectileDodge(caster)
+    BrewProjectile:Dodge(caster)
 
     --move unit based on ranges
     local position = nil

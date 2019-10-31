@@ -1,31 +1,35 @@
 wraith_king_q = class({})
 
+require("brew_projectile")
+
 function wraith_king_q:OnSpellStart()
   local caster = self:GetCaster()
   local target = self:GetCursorTarget()
 
   if target ~= nil then
-    local info = 
-    {
-      Target = target,
-      Source = caster,
-      Ability = self,	
-      EffectName = "particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf",
-      iSourceAttachment = DOTA_PROJECTILE_ATTACHMENT_ATTACK_2,
-      iMoveSpeed = self:GetSpecialValueFor("projectile_speed"),
-      bDodgeable = true,
-      flExpireTime = GameRules:GetGameTime() + 10, 
-      bProvidesVision = false
-      --iVisionRadius = 400,
-    }
-    projectile = ProjectileManager:CreateTrackingProjectile(info)
+    BrewProjectile:CreateTrackingProjectile({
+      target = target,
+      owner = caster,
+      ability = self,
+      effect = "particles/econ/items/dark_seer/dark_seer_ti8_immortal_arms/dark_seer_ti8_immortal_ion_shell.vpcf",
+      --attachType = PATTACH_ABSORIGIN_FOLLOW,
+      speed = self:GetSpecialValueFor("projectile_speed"),
+      radius = 64, --optional (default = 64)
+      isDodgeable = true,
+      maxDuration = 10.0,
+      providesVision = false,
+      visionRadius = 400,
+      --groundHeight, --optional (default = 100)
+      deleteOnOwnerKilled = true
+    })
+
     caster:EmitSound("Hero_SkeletonKing.Hellfire_Blast")
   end
 end
 
-function wraith_king_q:OnProjectileHit(hTarget, vLocation)
+function wraith_king_q:OnBrewProjectileHit(hTarget, vLocation)
   if hTarget ~= nil then
-    
+    print("on target hit:", hTarget:GetName())
     local damageTable = {
       victim = hTarget,
       attacker = self:GetCaster(),

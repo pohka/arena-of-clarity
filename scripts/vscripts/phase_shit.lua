@@ -1,6 +1,8 @@
 phase_shit = class({})
 LinkLuaModifier("phase_shit_modifier", LUA_MODIFIER_MOTION_NONE)
 
+require("brew_projectile")
+
 function phase_shit:OnSpellStart()
   local caster = self:GetCaster()
   caster:AddNewModifier(
@@ -9,7 +11,7 @@ function phase_shit:OnSpellStart()
     "phase_shit_modifier",
     {}
   )
-  ProjectileManager:ProjectileDodge(caster)
+  BrewProjectile:Dodge(caster)
 end
 
 function phase_shit:OnChannelFinish(interupted)
