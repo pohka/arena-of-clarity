@@ -19,7 +19,7 @@ function wraith_king_q:OnSpellStart()
       --iVisionRadius = 400,
     }
     projectile = ProjectileManager:CreateTrackingProjectile(info)
-    EmitSoundOn( "Hero_SkeletonKing.Hellfire_Blast", self:GetCaster() )
+    caster:EmitSound("Hero_SkeletonKing.Hellfire_Blast")
   end
 end
 
@@ -37,6 +37,6 @@ function wraith_king_q:OnProjectileHit(hTarget, vLocation)
     
     ApplyDamage(damageTable)
 
-    EmitSoundOn("Hero_SkeletonKing.Hellfire_BlastImpact", hTarget)
+    hTarget:EmitSound("Hero_SkeletonKing.Hellfire_BlastImpact")
   end
 end

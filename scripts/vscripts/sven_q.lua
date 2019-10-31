@@ -19,7 +19,7 @@ function sven_q:OnSpellStart()
       --iVisionRadius = 400,
     }
     ProjectileManager:CreateTrackingProjectile(info)
-    EmitSoundOn( "Hero_Sven.StormBolt", self:GetCaster() )
+    caster:EmitSound("Hero_Sven.StormBolt")
   end
 end
 
@@ -55,7 +55,7 @@ function sven_q:OnProjectileHit(hTarget, vLocation)
       })
     end
     
-    EmitSoundOn( "Hero_Sven.StormBoltImpact", hTarget )
+    hTarget:EmitSound("Hero_Sven.StormBoltImpact")
   end
 end
 

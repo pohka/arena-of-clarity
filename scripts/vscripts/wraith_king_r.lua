@@ -6,7 +6,7 @@ end
 
 function wraith_king_r:OnAbilityPhaseStart()
   local caster = self:GetCaster()
-  EmitSoundOn("Hero_SkeletonKing.Reincarnate.Stinger", caster)
+  caster:EmitSound("Hero_SkeletonKing.Reincarnate.Stinger")
   caster:StartGestureWithPlaybackRate(self:GetGesture(), 0.7)
   return true
 end
@@ -66,7 +66,7 @@ function wraith_king_r:OnProjectileHit(hTarget, vLocation)
       ability  = self
     })
 
-    EmitSoundOn("Hero_SkeletonKing.Hellfire_BlastImpact", hTarget)
+    hTarget:EmitSound("Hero_SkeletonKing.Hellfire_BlastImpact")
   end
 end
 

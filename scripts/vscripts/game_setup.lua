@@ -62,6 +62,9 @@ function GameSetup:init()
     --disable shop
     GameMode:SetRecommendedItemsDisabled(true)
     GameMode:SetStashPurchasingDisabled(true)
+
+    --disable FoW
+    GameMode:SetFogOfWarDisabled(true)
     
     
   --=================================
@@ -98,6 +101,7 @@ function GameSetup:init()
     GameMode:SetBuybackEnabled(false)
     GameMode:SetFixedRespawnTime(3)
 
+    --set number of players per team
     for teamID=TEAM_FIRST, TEAM_LAST do
       GameRules:SetCustomGameTeamMaxPlayers(teamID, PLAYERS_PER_TEAM)
     end
@@ -105,6 +109,9 @@ function GameSetup:init()
     --disable shop
     GameMode:SetRecommendedItemsDisabled(true)
     GameMode:SetStashPurchasingDisabled(true)
+
+    --disable FoW
+    GameMode:SetFogOfWarDisabled(true)
     
     --listen to game state event
     ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(self, "OnStateChange"), self)

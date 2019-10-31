@@ -40,6 +40,7 @@ end
   direction,
   spawnOrigin,
   radius,
+  effect, --particle effect string path
   deleteOnHit, --optional (default is true)
   deleteOnOwnerKilled, --option (default is false)
   providesVision, --optional (false by default)
@@ -54,6 +55,7 @@ end
 function BrewProjectile:CreateLinearProjectile(info)
   info.teamID = info.owner:GetTeam()
   local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, info.teamID)
+  ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
   
   --set default values
 
@@ -221,4 +223,9 @@ function BrewProjectile:RemoveAllProjectiles()
       BrewProjectile.data[id] = nil
     end
   end
+end
+
+
+function BrewProjectile:CreateTrackingProjectile(info)
+
 end

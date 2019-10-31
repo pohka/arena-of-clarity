@@ -27,9 +27,15 @@ function item_custom_blink:OnSpellStart()
       position = caster:GetAbsOrigin() + (direction * castDistance)
     end
 
+    
+    caster:EmitSound( "DOTA_Item.BlinkDagger.Activate")
+    --EmitSoundOnLocationWithCaster(caster:GetAbsOrigin(), "DOTA_Item.BlinkDagger.Activate", caster)
+
     FindClearSpaceForUnit(caster, position, true)
 
-    EmitSoundOn("DOTA_Item.BlinkDagger.Activate", caster)
+
+    --caster:EmitSound( "DOTA_Item.BlinkDagger.Activate", 0, 0.5, 0)
+    --EmitSoundOnLocationWithCaster(position, "DOTA_Item.BlinkDagger.Activate", caster)
 
     --face forward
     caster:MoveToPosition(position + direction)

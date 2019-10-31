@@ -1,5 +1,4 @@
 arrow = class({})
-LinkLuaModifier("arrow_proj_modifier", LUA_MODIFIER_MOTION_NONE)
 
 require("constants")
 --require("task")
@@ -22,20 +21,16 @@ function arrow:OnSpellStart()
     speed = speed,
     direction = direction,
     spawnOrigin = caster:GetAbsOrigin(),
-    radius = 256,
+    radius = 180,
     maxDistance = 2000,
     deleteOnOwnerKilled = true,
     providesVision = true,
     visionRadius = 350,
-    unitTargetType = DOTA_UNIT_TARGET_HERO
+    unitTargetType = DOTA_UNIT_TARGET_HERO,
+    effect = "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf"
   })
-  
-  local projUnit = BrewProjectile:GetProjectilteUnit(projID)
-  if projUnit ~= nil then
-    projUnit:AddNewModifier(projUnit, self, "arrow_proj_modifier", {})
-  end
 
-  EmitSoundOn("Hero_Mirana.ArrowCast", caster)
+  caster:EmitSound("Hero_Mirana.ArrowCast")
 end
 
 
@@ -51,7 +46,7 @@ function arrow:OnBrewProjectileHit(hTarget, vLocation)
       ability = self
     })
 
-    EmitSoundOn("Hero_Mirana.ArrowImpact", hTarget)
+    hTarget:EmitSound("Hero_Mirana.ArrowImpact")
   end
 
   return true
