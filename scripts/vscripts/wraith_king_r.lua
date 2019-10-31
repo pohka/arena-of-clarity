@@ -36,26 +36,42 @@ function wraith_king_r:OnSpellStart()
   )
 
   for i=1, #units do
-    local info = 
-    {
-      Target = units[i],
-      Source = caster,
-      Ability = self,	
-      EffectName = "particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf",
-      iSourceAttachment = PATTACH_ABSORIGIN,
-      iMoveSpeed = self:GetSpecialValueFor("projectile_speed"),
-      bDodgeable = true,
-      flExpireTime = GameRules:GetGameTime() + 10, 
-      bProvidesVision = true,
-      iVisionRadius = 300
-    }
-    projectile = ProjectileManager:CreateTrackingProjectile(info)
+    -- local info = 
+    -- {
+    --   Target = units[i],
+    --   Source = caster,
+    --   Ability = self,	
+    --   EffectName = "particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf",
+    --   iSourceAttachment = PATTACH_ABSORIGIN,
+    --   iMoveSpeed = self:GetSpecialValueFor("projectile_speed"),
+    --   bDodgeable = true,
+    --   flExpireTime = GameRules:GetGameTime() + 10, 
+    --   bProvidesVision = true,
+    --   iVisionRadius = 300
+    -- }
+    -- projectile = ProjectileManager:CreateTrackingProjectile(info)
+    BrewProjectile:CreateTrackingProjectile({
+      target = units[i],
+      owner = caster,
+      ability = self,
+      effect = "particles/econ/items/dark_seer/dark_seer_ti8_immortal_arms/dark_seer_ti8_immortal_ion_shell.vpcf",
+      --attachType = PATTACH_ABSORIGIN_FOLLOW,
+      speed = self:GetSpecialValueFor("projectile_speed"),
+      --radius = 32, --optional (default = 32)
+      isDodgeable = true,
+      maxDuration = 10.0,
+      providesVision = false,
+      --visionRadius = 400,
+      --groundHeight, --optional (default = 100)
+      deleteOnOwnerKilled = true,
+      spawnOrigin = caster:GetAbsOrigin()
+    })
   end
 
   caster:RemoveGesture(self:GetGesture())
 end
 
-function wraith_king_r:OnProjectileHit(hTarget, vLocation)
+function wraith_king_r:OnBrewProjectileHit(hTarget, vLocation)
   if hTarget ~= nil then
     ApplyDamage({
       victim = hTarget,

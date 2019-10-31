@@ -14,13 +14,14 @@ function wraith_king_q:OnSpellStart()
       effect = "particles/econ/items/dark_seer/dark_seer_ti8_immortal_arms/dark_seer_ti8_immortal_ion_shell.vpcf",
       --attachType = PATTACH_ABSORIGIN_FOLLOW,
       speed = self:GetSpecialValueFor("projectile_speed"),
-      radius = 64, --optional (default = 64)
+     -- radius = 64, --optional (default = 32)
       isDodgeable = true,
       maxDuration = 10.0,
       providesVision = false,
       visionRadius = 400,
       --groundHeight, --optional (default = 100)
-      deleteOnOwnerKilled = true
+      deleteOnOwnerKilled = true,
+      spawnOrigin = caster:GetAbsOrigin()
     })
 
     caster:EmitSound("Hero_SkeletonKing.Hellfire_Blast")

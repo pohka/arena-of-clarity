@@ -1,29 +1,34 @@
 sven_q = class({})
 
+require("brew_projectile")
+
 function sven_q:OnSpellStart()
   local caster = self:GetCaster()
   local target = self:GetCursorTarget()
 
   if target ~= nil then
-    local info = 
-    {
-      Target = target,
-      Source = caster,
-      Ability = self,	
-      EffectName = "particles/units/heroes/hero_sven/sven_spell_storm_bolt.vpcf",
-      iSourceAttachment = DOTA_PROJECTILE_ATTACHMENT_ATTACK_2,
-      iMoveSpeed = self:GetSpecialValueFor("projectile_speed"),
-      bDodgeable = true,
-      flExpireTime = GameRules:GetGameTime() + 10, 
-      bProvidesVision = false
-      --iVisionRadius = 400,
-    }
-    ProjectileManager:CreateTrackingProjectile(info)
+    BrewProjectile:CreateTrackingProjectile({
+      target = target,
+      owner = caster,
+      ability = self,
+      effect = "particles/items3_fx/lotus_orb_shield.vpcf",
+      --attachType = PATTACH_ABSORIGIN_FOLLOW,
+      speed = self:GetSpecialValueFor("projectile_speed"),
+     -- radius = 64, --optional (default = 32)
+      isDodgeable = true,
+      maxDuration = 10.0,
+      providesVision = false,
+      --visionRadius = 400,
+      --groundHeight, --optional (default = 100)
+      deleteOnOwnerKilled = true,
+      spawnOrigin = caster:GetAbsOrigin()
+    })
+
     caster:EmitSound("Hero_Sven.StormBolt")
   end
 end
 
-function sven_q:OnProjectileHit(hTarget, vLocation)
+function sven_q:OnBewProjectileHit(hTarget, vLocation)
   local caster = self:GetCaster()
   local teamID = caster:GetTeam()
 

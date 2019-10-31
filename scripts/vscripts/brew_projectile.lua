@@ -18,6 +18,7 @@ function BrewProjectile:init()
   ListenToGameEvent("entity_killed", Dynamic_Wrap(self, "OnUnitKilled"), self)
 end
 
+--listen function, called when entity is killed
 function BrewProjectile:OnUnitKilled( args )
     -- args:
   -- entindex_inflictor
@@ -25,7 +26,7 @@ function BrewProjectile:OnUnitKilled( args )
   -- entindex_killed
   -- entindex_attacker
   -- splitscreenplayer
-
+ 
  for id, proj in pairs(BrewProjectile.data) do
   if proj.type == PROJECTILE_TYPE_LINEAR then
     --remove all owned linear projectiles if deleteOnOwnerKilled == true
@@ -46,6 +47,8 @@ function BrewProjectile:OnUnitKilled( args )
 end
 
 --[[
+  info table:
+  ------------
   owner,
   ability,
   speed,
@@ -65,9 +68,16 @@ end
   maxDistance, --optional
   maxDuration --optional
 ]]
+--creates a linear projectile
 function BrewProjectile:CreateLinearProjectile(info)
   info.teamID = info.owner:GetTeam()
   local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, info.teamID)
+
+  if info.groundHeight == nil then
+    info.groundHeight = 100
+  end
+  info.spawnOrigin.z = GetGroundHeight(dummy:GetAbsOrigin(), dummy) + info.groundHeight
+  dummy:SetAbsOrigin(info.spawnOrigin)
 
   --attach particle effect
   if info.attachType == nil then
@@ -89,9 +99,7 @@ function BrewProjectile:CreateLinearProjectile(info)
     dummy:SetDayTimeVisionRange(info.visionRadius)
   end
 
-  if info.groundHeight == nil then
-    info.groundHeight = 100
-  end
+  
 
   if info.unitTargetTeam == nil then
     info.unitTargetTeam = DOTA_UNIT_TARGET_TEAM_ENEMY
@@ -134,6 +142,7 @@ function BrewProjectile:CreateLinearProjectile(info)
   return id
 end
 
+--returns the dummy unit for the projectile
 function BrewProjectile:GetProjectilteUnit(projectileID)
   local proj = self.data[projectileID]
   if proj ~= nil then
@@ -144,7 +153,7 @@ function BrewProjectile:GetProjectilteUnit(projectileID)
   return nil
 end
 
-
+--thinker function for handling all of the projectiles each frame
 function BrewProjectile:OnThink()
   local now = GameTime:GetTime()
   local delta = now - BrewProjectile.lastThinkTime
@@ -243,6 +252,7 @@ function BrewProjectile:OnThink()
   return 0.015
 end
 
+--remove a projectile by id
 function BrewProjectile:RemoveProjectile(projectileID)
   local proj = BrewProjectile.data[projectileID]
   if proj ~= nil then
@@ -257,6 +267,7 @@ function BrewProjectile:RemoveProjectile(projectileID)
   end
 end
 
+--remove all projectiles
 function BrewProjectile:RemoveAllProjectiles()
   for id, proj in pairs(BrewProjectile.data) do
     local entindex = BrewProjectile.data[id].entindex
@@ -271,25 +282,38 @@ function BrewProjectile:RemoveAllProjectiles()
 end
 
 --[[
+  info table:
+  ------------
   target,
   owner,
   ability,
   effect,
   attachType,
   speed,
-  radius, --optional (default = 64)
+  radius, --optional (default = 32)
   isDodgeable,
   maxDuration,
   providesVision,
   visionRadius,
   groundHeight, --optional (default = 100)
-  deleteOnOwnerKilled
+  deleteOnOwnerKilled,
+  spawnOrigin 
 ]]
+--creates a tracking projectile
 function BrewProjectile:CreateTrackingProjectile(info)
 
   local proj = {}
   proj.teamID = info.owner:GetTeam()
-  local dummy = CreateUnitByName("dummy_unit", info.owner:GetAbsOrigin(), true, nil, nil, proj.teamID)
+  local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, proj.teamID)
+
+  --set z offset
+  if info.groundHeight == nil then
+    proj.groundHeight = 100
+  else
+    proj.groundHeight = info.groundHeight
+  end
+  info.spawnOrigin.z = GetGroundHeight(dummy:GetAbsOrigin(), dummy) + proj.groundHeight
+  dummy:SetAbsOrigin(info.spawnOrigin)
 
    --attach particle effect
   if info.attachType == nil then
@@ -308,7 +332,7 @@ function BrewProjectile:CreateTrackingProjectile(info)
   proj.deleteOnOwnerKilled = info.deleteOnOwnerKilled
   
   if info.radius == nil then
-    proj.radius = 64
+    proj.radius = 32
   else
     proj.radius = info.radius
   end
@@ -323,13 +347,6 @@ function BrewProjectile:CreateTrackingProjectile(info)
     dummy:SetDayTimeVisionRange(info.visionRadius)
   end
 
-  if info.groundHeight == nil then
-    proj.groundHeight = 100
-  else
-    proj.groundHeight = info.groundHeight
-  end
-  
-
   proj.type = PROJECTILE_TYPE_TRACKING
   local id = BrewProjectile.counter
   BrewProjectile.counter = BrewProjectile.counter + 1
@@ -337,6 +354,7 @@ function BrewProjectile:CreateTrackingProjectile(info)
 
 end
 
+--makes a unit disjoint tracking projectiles that are dodgeable
 function BrewProjectile:Dodge(unit)
   local removedIDs = {}
   for id, proj in pairs(self.data) do
