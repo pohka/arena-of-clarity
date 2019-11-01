@@ -33,16 +33,16 @@ function BrewProjectile:OnUnitKilled( args )
   if proj.type == PROJECTILE_TYPE_LINEAR then
     --remove all owned linear projectiles if deleteOnOwnerKilled == true
     if proj.deleteOnOwnerKilled and proj.owner ~= nil and proj.owner:entindex() == args.entindex_killed then
-      self:RemoveProjectile(id)
+      BrewProjectile:RemoveProjectile(id)
     end
   elseif proj.type == PROJECTILE_TYPE_TRACKING then
     local removeIDs = {}
     --remove all owned tracking projectiles if deleteOnOwnerKilled == true
     if proj.deleteOnOwnerKilled and proj.owner ~= nil and proj.owner:entindex() == args.entindex_killed then
-      self:RemoveProjectile(id)
+      BrewProjectile:RemoveProjectile(id)
     --if target died, remove all tracking projectiles targeting them
     elseif proj.target ~= nil and proj.target:entindex() == args.entindex_killed then
-      self:RemoveProjectile(id)
+      BrewProjectile:RemoveProjectile(id)
     end
   end
  end
@@ -141,7 +141,7 @@ function BrewProjectile:CreateLinearProjectile(info)
 
   info.lastBounceTime = 0.0
   if info.minTimeBetweenBounces == nil then
-    info.minTimeBetweenBounces = 400 / info.speed
+    info.minTimeBetweenBounces = 100 / info.speed
   end
 
   info.type = PROJECTILE_TYPE_LINEAR
@@ -174,7 +174,7 @@ function BrewProjectile:OnThink()
   for id, proj in pairs(BrewProjectile.data) do
     if proj.endTime ~= nil and now > proj.endTime then
       --table.insert(removedIDs, id)
-      self:RemoveProjectile(id)
+      BrewProjectile:RemoveProjectile(id)
     else
     
       local dummy = EntIndexToHScript(proj.entindex)
@@ -213,7 +213,7 @@ function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
     local curDistanceTraveled = diff:Length2D()
     if curDistanceTraveled > proj.maxDistance then
       --table.insert(removedIDs, id)
-      self:RemoveProjectile(id)
+      BrewProjectile:RemoveProjectile(id)
       isRemoved = true
     end
   end
@@ -246,7 +246,7 @@ function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
 
           if proj.deleteOnHit == true then
             --table.insert(removedIDs, id)
-            self:RemoveProjectile(id)
+            BrewProjectile:RemoveProjectile(id)
           end
         end
       end
@@ -273,15 +273,19 @@ function BrewProjectile:OnThinkTracking(dummy, id, proj, delta)
       proj.ability:OnBrewProjectileHit(proj.target, nextPos)
     end
 
-    self:RemoveProjectile(id)
+    BrewProjectile:RemoveProjectile(id)
     --table.insert(removedIDs, id)
   end
 end
 
 function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
-  local indexes = { 1, 2 }
+  local indexes = { 1, 2, 3, 4, 5 ,6 }
 
-  local isDebug = false
+  local isDebug = true
+
+  if isDebug then
+    DebugDrawSphere(dummy:GetAbsOrigin(), Vector(0,255,0), 255, proj.radius, false, delta)
+  end
 
   for i=1, #indexes do
     local name = "wall_" .. indexes[i]
@@ -291,22 +295,33 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
       --print("angles", angles)
       local center = wall:GetAbsOrigin()
       local startingSize = Vector(32,256,128)
-      local padding = 48
+      local padding = 32
       local size = startingSize + Vector(padding, padding, 0)
       local minPt = center - size
       local maxPt = center + size
 
       local color = Vector(0,255,0)
       
-      local pos = dummy:GetAbsOrigin() - center --dummy pos in relation to box origin
-
-      if angles.y ~= 0 then
-        local pos = vmath:RotateAround(pos, Vector(0,0,0), -angles.y)
-      end
-      --true there is collision (checking bounding box in object space)
-      if pos.x > -size.x and pos.x < size.x and pos.y > -size.y and pos.y < size.y then
+      --local pos = dummy:GetAbsOrigin() - center --dummy pos in relation to box origin
+      DebugDrawSphere(center, Vector(0,255,0), 255, 100, false, 2.0)
+      --if angles.y ~= 0 then
+      local pos = vmath:RotateAround(dummy:GetAbsOrigin(), center, -angles.y)
+        --pos = pos - center
+      --end
+      --true there is collision (checking bounding box in world space)
+      if pos.x > minPt.x and pos.x < maxPt.x and pos.y > minPt.y and pos.y < maxPt.y then
         proj.lastBounceTime = GameTime:GetTime()
         local normal = nil
+
+        --problem with 45 degree bounding boxes, they have correct pos
+        if indexes[i] == 4 then
+          print("Impact:")
+          print("center:", center)
+          print("rect pts: min:", minPt.x, minPt.y, " max:", maxPt.x, maxPt.y)
+          print("rotated proj pos:", pos.x, pos.y)
+        end
+
+        --4 sided reflection
         -- if pos.y > startingSize.y then
         --   normal = Vector(0, 1, 0)
         -- elseif pos.y < -startingSize.y then
@@ -317,19 +332,24 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
         --   normal = Vector(1, 0, 0)
         -- end
 
-        if angles.y == 0 then
-          if pos.x < 0 then
+        --2 sided reflection
+        if pos.x < 0 then
           normal = Vector(-1, 0, 0)
-          else
-            normal = Vector(1, 0, 0)
-          end
-        elseif angles.y == 90 then
-          if pos.y < 0 then
+        else
+          normal = Vector(1, 0, 0)
+        end
+
+        if angles.y % 90 > 1.0 then
+          if pos.x < 0 then
             normal = Vector(0, -1, 0)
           else
             normal = Vector(0, 1, 0)
-          end
+          end 
         end
+
+        print("angle:", angles.y)
+        normal = vmath:RotateAround(normal, Vector(0,0,0), -angles.y)
+        --DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + normal * 400, 255, 0, 255, false, 5.0)
 
         if normal ~= nil then
           if isDebug == true then
@@ -348,12 +368,14 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
             color = Vector(255,0,0)
           end
         end
+
+        if isDebug then
+          DebugDrawBoxDirection(center, -size, size, normal, color, 50, 2.0)
+        end
       end
 
       
-      if isDebug then
-        DebugDrawBoxDirection(Vector(0,0,0), minPt, maxPt, Vector(1,0,0), color, 50, delta)
-      end
+      
     else
       print("not found:" .. name)
     end
@@ -474,6 +496,6 @@ function BrewProjectile:Dodge(unit)
   end
 
   for i=1, #removedIDs do
-    self:RemoveProjectile(removedIDs[i])
+    BrewProjectile:RemoveProjectile(removedIDs[i])
   end
 end
