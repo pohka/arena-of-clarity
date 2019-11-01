@@ -21,13 +21,14 @@ function arrow:OnSpellStart()
     speed = speed,
     direction = direction,
     spawnOrigin = caster:GetAbsOrigin(),
-    radius = 180,
+    radius = 64,
     maxDistance = 2000,
     deleteOnOwnerKilled = true,
     providesVision = true,
     visionRadius = 350,
     unitTargetType = DOTA_UNIT_TARGET_HERO,
-    effect = "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf"
+    effect = "particles/econ/items/omniknight/omni_ti8_head/omniknight_repel_buff_ti8_body_glow.vpcf",
+    canBounce = true
   })
 
   caster:EmitSound("Hero_Mirana.ArrowCast")

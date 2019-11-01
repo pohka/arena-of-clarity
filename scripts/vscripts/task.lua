@@ -61,33 +61,34 @@ function Task:Interupt(taskID)
 end
 
 function Task:OnThink()
-  local now = GameRules:GetGameTime()
+  if GameRules:IsGamePaused() == false then
+    local now = GameRules:GetGameTime()
 
-  local i=1
-  while Task.list[i] ~= nil do
-    --removed any interupted tasks
-		if Task.list[i].interupted == true then
-      table.remove(Task.list, i)
-      i = i-1
-    --if function is ready to be called
-    elseif Task.list[i].endTime <= now then
-      --call task
-      local res = Task.list[i].func(Task.list[i].params)
-
-      --if function returns -1 then end interval
-      local IsIntervalEnded = res == nil or res < 0      
-
-      --update Task.list and endTime
-      if Task.list[i].type == TASK_INTERVAL and IsIntervalEnded == false then --interval
-        Task.list[i].endTime = Task.list[i].endTime + res --Task.list[i].interval
-      else --delay or ended interval
+    local i=1
+    while Task.list[i] ~= nil do
+      --removed any interupted tasks
+      if Task.list[i].interupted == true then
         table.remove(Task.list, i)
         i = i-1
+      --if function is ready to be called
+      elseif Task.list[i].endTime <= now then
+        --call task
+        local res = Task.list[i].func(Task.list[i].params)
+
+        --if function returns -1 then end interval
+        local IsIntervalEnded = res == nil or res < 0      
+
+        --update Task.list and endTime
+        if Task.list[i].type == TASK_INTERVAL and IsIntervalEnded == false then --interval
+          Task.list[i].endTime = Task.list[i].endTime + res --Task.list[i].interval
+        else --delay or ended interval
+          table.remove(Task.list, i)
+          i = i-1
+        end
       end
+      i = i+1
     end
-    i = i+1
   end
-  
 
   return 0.03
 end

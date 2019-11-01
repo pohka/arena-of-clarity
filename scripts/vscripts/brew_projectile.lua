@@ -5,12 +5,14 @@ if BrewProjectile == nil then
  BrewProjectile.data = {}
  BrewProjectile.counter = 0
  BrewProjectile.lastThinkTime = 0.0
+ BrewProjectile.r = 0
 end
 
 
 require("game_time")
 require("task")
 require("constants")
+require("vmath")
 
 function BrewProjectile:init()
   BrewProjectile.lastThinkTime = GameTime:GetTime()
@@ -66,7 +68,9 @@ end
   unitTargetFlags, --optional (DOTA_UNIT_TARGET_FLAG_NONE = default)
   groundHeight, -- optional (100 = default)
   maxDistance, --optional
-  maxDuration --optional
+  maxDuration, --optional
+  canBounce, --optional (if set to true it will allow bouncing)
+  minTimeBetweenBounces -- optional (default = 400/speed)
 ]]
 --creates a linear projectile
 function BrewProjectile:CreateLinearProjectile(info)
@@ -131,6 +135,15 @@ function BrewProjectile:CreateLinearProjectile(info)
     info.deleteOnOwnerKilled = false
   end
 
+  if info.canBounce == nil then
+    info.canBounce = false
+  end
+
+  info.lastBounceTime = 0.0
+  if info.minTimeBetweenBounces == nil then
+    info.minTimeBetweenBounces = 400 / info.speed
+  end
+
   info.type = PROJECTILE_TYPE_LINEAR
 
   local id = BrewProjectile.counter
@@ -157,99 +170,194 @@ end
 function BrewProjectile:OnThink()
   local now = GameTime:GetTime()
   local delta = now - BrewProjectile.lastThinkTime
-  local removedIDs = {}
+  --local removedIDs = {}
   for id, proj in pairs(BrewProjectile.data) do
     if proj.endTime ~= nil and now > proj.endTime then
-      table.insert(removedIDs, id)
+      --table.insert(removedIDs, id)
+      self:RemoveProjectile(id)
     else
     
       local dummy = EntIndexToHScript(proj.entindex)
       if dummy ~= nil then
         --LINEAR 
         if proj.type == PROJECTILE_TYPE_LINEAR then
-          --move projectile dummy
-          local pos = dummy:GetAbsOrigin() + (proj.direction * proj.speed * delta)
-          pos.z =  GetGroundHeight(pos, dummy) + proj.groundHeight
-          dummy:SetAbsOrigin(pos)
-          local projZ = pos.z
-
-          --check if reached max distance
-          local isRemoved = false
-          if proj.maxDistance ~= nil then
-            local diff = dummy:GetAbsOrigin() - proj.spawnOrigin
-            local curDistanceTraveled = diff:Length2D()
-            if curDistanceTraveled > proj.maxDistance then
-              table.insert(removedIDs, id)
-              isRemoved = true
-            end
-          end
-
-          if isRemoved == false then
-            --check if hit target
-            local units = FindUnitsInRadius(
-              proj.teamID,
-              pos,
-              nil,
-              proj.radius,
-              proj.unitTargetTeam,
-              proj.unitTargetType,
-              proj.unitTargetFlags,
-              FIND_ANY_ORDER,
-              false
-            )
-
-            local hasFoundTarget = false
-            for _,target in pairs(units) do
-              if hasFoundTarget == false then
-                --check z-axis
-                local targetPos = target:GetAbsOrigin()
-                if targetPos.z - projZ < 1000 then
-                  hasFoundTarget = true
-                  
-                  if proj.ability.OnBrewProjectileHit ~= nil then
-                    proj.ability:OnBrewProjectileHit(target, dummy:GetAbsOrigin())
-                  end
-
-                  if proj.deleteOnHit == true then
-                    table.insert(removedIDs, id)
-                  end
-                end
-              end
-            end
-          end
+          BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
 
          --TRACKING
         elseif proj.type == PROJECTILE_TYPE_TRACKING then
-          local targetPos = proj.target:GetAbsOrigin()
-          
-          --move dummy
-          local direction = targetPos - dummy:GetAbsOrigin()
-          direction.z = 0
-          direction = direction:Normalized()
-          local nextPos = dummy:GetAbsOrigin() + (direction * proj.speed * delta)
-          nextPos.z =  GetGroundHeight(nextPos, dummy) + proj.groundHeight
-          dummy:SetAbsOrigin(nextPos)
-
-          --check if hitting target
-          local dist = (targetPos - nextPos):Length2D()
-          if dist < proj.radius then
-            if proj.ability.OnBrewProjectileHit ~= nil then
-              proj.ability:OnBrewProjectileHit(proj.target, nextPos)
-            end
-
-            table.insert(removedIDs, id)
-          end
+          BrewProjectile:OnThinkTracking(dummy, id, proj, delta)
         end
       end
     end
   end
 
-  for i=1, #removedIDs do
-    BrewProjectile:RemoveProjectile(removedIDs[i])
-  end
-
   BrewProjectile.lastThinkTime = now
   return 0.015
+end
+
+function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
+  --move projectile dummy
+  local pos = dummy:GetAbsOrigin() + (proj.direction * proj.speed * delta)
+  pos.z =  GetGroundHeight(pos, dummy) + proj.groundHeight
+  dummy:SetAbsOrigin(pos)
+  local projZ = pos.z
+
+  if proj.canBounce and GameTime:GetTime() - proj.lastBounceTime > proj.minTimeBetweenBounces then
+    BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
+  end
+
+  --check if reached max distance
+  local isRemoved = false
+  if proj.maxDistance ~= nil then
+    local diff = dummy:GetAbsOrigin() - proj.spawnOrigin
+    local curDistanceTraveled = diff:Length2D()
+    if curDistanceTraveled > proj.maxDistance then
+      --table.insert(removedIDs, id)
+      self:RemoveProjectile(id)
+      isRemoved = true
+    end
+  end
+
+  if isRemoved == false then
+    --check if hit target
+    local units = FindUnitsInRadius(
+      proj.teamID,
+      pos,
+      nil,
+      proj.radius,
+      proj.unitTargetTeam,
+      proj.unitTargetType,
+      proj.unitTargetFlags,
+      FIND_ANY_ORDER,
+      false
+    )
+
+    local hasFoundTarget = false
+    for _,target in pairs(units) do
+      if hasFoundTarget == false then
+        --check z-axis
+        local targetPos = target:GetAbsOrigin()
+        if targetPos.z - projZ < 1000 then
+          hasFoundTarget = true
+          
+          if proj.ability.OnBrewProjectileHit ~= nil then
+            proj.ability:OnBrewProjectileHit(target, dummy:GetAbsOrigin())
+          end
+
+          if proj.deleteOnHit == true then
+            --table.insert(removedIDs, id)
+            self:RemoveProjectile(id)
+          end
+        end
+      end
+    end
+  end
+end
+
+
+function BrewProjectile:OnThinkTracking(dummy, id, proj, delta)
+  local targetPos = proj.target:GetAbsOrigin()
+          
+  --move dummy
+  local direction = targetPos - dummy:GetAbsOrigin()
+  direction.z = 0
+  direction = direction:Normalized()
+  local nextPos = dummy:GetAbsOrigin() + (direction * proj.speed * delta)
+  nextPos.z =  GetGroundHeight(nextPos, dummy) + proj.groundHeight
+  dummy:SetAbsOrigin(nextPos)
+
+  --check if hitting target
+  local dist = (targetPos - nextPos):Length2D()
+  if dist < proj.radius then
+    if proj.ability.OnBrewProjectileHit ~= nil then
+      proj.ability:OnBrewProjectileHit(proj.target, nextPos)
+    end
+
+    self:RemoveProjectile(id)
+    --table.insert(removedIDs, id)
+  end
+end
+
+function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
+  local indexes = { 1, 2 }
+
+  local isDebug = false
+
+  for i=1, #indexes do
+    local name = "wall_" .. indexes[i]
+    local wall = Entities:FindByName(nil, name)
+    if wall ~= nil then
+      local angles = wall:GetAnglesAsVector()
+      --print("angles", angles)
+      local center = wall:GetAbsOrigin()
+      local startingSize = Vector(32,256,128)
+      local padding = 48
+      local size = startingSize + Vector(padding, padding, 0)
+      local minPt = center - size
+      local maxPt = center + size
+
+      local color = Vector(0,255,0)
+      
+      local pos = dummy:GetAbsOrigin() - center --dummy pos in relation to box origin
+
+      if angles.y ~= 0 then
+        local pos = vmath:RotateAround(pos, Vector(0,0,0), -angles.y)
+      end
+      --true there is collision (checking bounding box in object space)
+      if pos.x > -size.x and pos.x < size.x and pos.y > -size.y and pos.y < size.y then
+        proj.lastBounceTime = GameTime:GetTime()
+        local normal = nil
+        -- if pos.y > startingSize.y then
+        --   normal = Vector(0, 1, 0)
+        -- elseif pos.y < -startingSize.y then
+        --   normal = Vector(0, -1, 0)
+        -- elseif pos.x < 0 then
+        --   normal = Vector(-1, 0, 0)
+        -- else
+        --   normal = Vector(1, 0, 0)
+        -- end
+
+        if angles.y == 0 then
+          if pos.x < 0 then
+          normal = Vector(-1, 0, 0)
+          else
+            normal = Vector(1, 0, 0)
+          end
+        elseif angles.y == 90 then
+          if pos.y < 0 then
+            normal = Vector(0, -1, 0)
+          else
+            normal = Vector(0, 1, 0)
+          end
+        end
+
+        if normal ~= nil then
+          if isDebug == true then
+            --draw normal (red line)
+            DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + normal * 400, 255, 0, 0, false, 5.0)
+            --draw in angle (green line)
+            DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() - proj.direction * 400, 0, 255, 0, false, 5.0)
+          end
+          local d = proj.direction
+          local d_dot_n = d:Dot(normal)
+          proj.direction = d - 2 * d_dot_n * normal
+
+          if isDebug == true then
+            --draw out angle (blue line)
+            DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + proj.direction * 800, 0, 0, 255, false, 5.0)
+            color = Vector(255,0,0)
+          end
+        end
+      end
+
+      
+      if isDebug then
+        DebugDrawBoxDirection(Vector(0,0,0), minPt, maxPt, Vector(1,0,0), color, 50, delta)
+      end
+    else
+      print("not found:" .. name)
+    end
+  end
 end
 
 --remove a projectile by id
