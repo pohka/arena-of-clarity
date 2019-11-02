@@ -18,6 +18,16 @@ function BrewProjectile:init()
   BrewProjectile.lastThinkTime = GameTime:GetTime()
   Task:Interval(BrewProjectile.OnThink, 0.015, {})
   ListenToGameEvent("entity_killed", Dynamic_Wrap(self, "OnUnitKilled"), self)
+  ListenToGameEvent("npc_spawned", Dynamic_Wrap(self, "OnUnitSpawned"), self)
+end
+
+function BrewProjectile:OnUnitSpawned(args) 
+  local entH = EntIndexToHScript(args.entindex)
+  if entH ~= nil then
+    if entH.IsProjectile == nil then
+      entH.IsProjectile = function() return false end
+    end
+  end
 end
 
 --listen function, called when entity is killed
@@ -54,7 +64,7 @@ end
   owner,
   ability,
   speed,
-  direction,
+  direction, --normalized vector
   spawnOrigin,
   radius,
   effect, --particle effect string path
@@ -68,14 +78,16 @@ end
   unitTargetFlags, --optional (DOTA_UNIT_TARGET_FLAG_NONE = default)
   groundHeight, -- optional (100 = default)
   maxDistance, --optional
-  maxDuration, --optional
-  canBounce, --optional (if set to true it will allow bouncing)
-  minTimeBetweenBounces -- optional (default = 400/speed)
+  maxDuration, --optional (recommended)
+  canBounce, --optional (default = false, if set to true it will allow bouncing)
+  minTimeBetweenBounces -- optional (default = 100/speed)
 ]]
 --creates a linear projectile
 function BrewProjectile:CreateLinearProjectile(info)
   info.teamID = info.owner:GetTeam()
   local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, info.teamID)
+  dummy.IsProjectile = function() return true end
+
 
   if info.groundHeight == nil then
     info.groundHeight = 100
@@ -147,6 +159,7 @@ function BrewProjectile:CreateLinearProjectile(info)
   info.type = PROJECTILE_TYPE_LINEAR
 
   local id = BrewProjectile.counter
+  dummy.GetProjectileID = function() return id end
   BrewProjectile.counter = BrewProjectile.counter + 1
   
   self.data[id]  = info
@@ -281,7 +294,7 @@ end
 function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
   local indexes = { 1, 2, 3, 4, 5 ,6 }
 
-  local isDebug = true
+  local isDebug = false
 
   if isDebug then
     DebugDrawSphere(dummy:GetAbsOrigin(), Vector(0,255,0), 255, proj.radius, false, delta)
@@ -303,7 +316,7 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
       local color = Vector(0,255,0)
       
       --local pos = dummy:GetAbsOrigin() - center --dummy pos in relation to box origin
-      DebugDrawSphere(center, Vector(0,255,0), 255, 100, false, 2.0)
+      --DebugDrawSphere(center, Vector(0,255,0), 255, 100, false, 2.0)
       --if angles.y ~= 0 then
       local pos = vmath:RotateAround(dummy:GetAbsOrigin(), center, -angles.y)
         --pos = pos - center
