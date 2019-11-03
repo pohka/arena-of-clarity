@@ -70,9 +70,11 @@ if BrewProjectile == nil then
  BrewProjectile.data = {}
  BrewProjectile.counter = 0
  BrewProjectile.lastThinkTime = 0.0
- BrewProjectile.r = 0
 
  _G.PROJECTILE_ABIL_INDEX = 1
+
+ _G.PROJECTILE_FLAG_NONE = 0
+ _G.PROJECTILE_FLAG_OTHERS_CANT_DISABLE = 1
 end
 
 
@@ -187,7 +189,8 @@ end
   maxDistance, --optional
   maxDuration, --optional (recommended)
   canBounce, --optional (default = false, if set to true it will allow bouncing)
-  minTimeBetweenBounces -- optional (default = 100/speed)
+  minTimeBetweenBounces -- optional (default = 100/speed),
+  projectileFlags, -- optional (PROJECTILE_FLAG_NONE = default) bitwise flags for exception rules
 ]]
 --creates a linear projectile
 function BrewProjectile:CreateLinearProjectile(info)
@@ -273,6 +276,9 @@ function BrewProjectile:CreateLinearProjectile(info)
 
   info.currentDistance = 0
 
+  if info.projectileFlags == nil then
+    info.projectileFlags = PROJECTILE_FLAG_NONE
+  end
   
   local id = dummy:GetProjectileID()
   self.data[id]  = info
@@ -402,16 +408,22 @@ function BrewProjectile:OnThinkTracking(dummy, id, proj, delta)
   direction = direction:Normalized()
   local nextPos = dummy:GetAbsOrigin() + (direction * proj.speed * delta)
   nextPos.z =  GetGroundHeight(nextPos, dummy) + proj.groundHeight
-  dummy:SetAbsOrigin(nextPos)
 
-  --check if hitting target
-  local dist = (targetPos - nextPos):Length2D()
-  if dist < proj.radius then
-    if proj.ability.OnBrewProjectileHit ~= nil then
-      proj.ability:OnBrewProjectileHit(proj.target, dummy)
+  local abil = dummy:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
+  if abil ~= nil then
+    if abil:GetIsDisabled() == false then
+      dummy:SetAbsOrigin(nextPos)
+
+      --check if hitting target
+      local dist = (targetPos - nextPos):Length2D()
+      if dist < proj.radius then
+        if proj.ability.OnBrewProjectileHit ~= nil then
+          proj.ability:OnBrewProjectileHit(proj.target, dummy)
+        end
+
+        BrewProjectile:RemoveProjectile(id)
+      end
     end
-
-    BrewProjectile:RemoveProjectile(id)
   end
 end
 
@@ -580,7 +592,7 @@ function BrewProjectile:CreateTrackingProjectile(info)
   proj.teamID = info.owner:GetTeam()
   local dummy = BrewProjectile:CreateBaseProjectileEntity({
     spawnOrigin = info.spawnOrigin,
-    teamID = info.teamID
+    teamID = proj.teamID
   })
  -- local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, proj.teamID)
 
@@ -624,6 +636,14 @@ function BrewProjectile:CreateTrackingProjectile(info)
   if proj.providesVision and info.visionRadius ~= nil then
     dummy:SetDayTimeVisionRange(info.visionRadius)
   end
+
+  if info.projectileFlags == nil then
+    proj.projectileFlags = PROJECTILE_FLAG_NONE
+  else
+    proj.projectileFlags = info.projectileFlags
+  end
+
+  proj.type = PROJECTILE_TYPE_TRACKING
 
   local id = dummy:GetProjectileID()
   self.data[id] = proj

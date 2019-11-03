@@ -27,7 +27,8 @@ function sven_q:OnSpellStart()
     effect = "particles/items3_fx/lotus_orb_shield.vpcf",
     deleteOnHit = true,
     deleteOnOwnerKilled = false,
-    maxDuration = 2.0
+    maxDuration = 2.0,
+    projectileFlags = PROJECTILE_FLAG_OTHERS_CANT_DISABLE
   })
 
 
@@ -74,29 +75,36 @@ function sven_q:OnBrewProjectileHit(hTarget, hProjectile)
       })
       EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Sven.StormBoltImpact", caster)
     elseif hTarget:IsProjectile() then
-      print("is projectile = true")
-      EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Sven.StormBoltImpact", caster)
+
+      local projID = hTarget:GetProjectileID()
+      local targetInfo = BrewProjectile:GetProjectileInfo(projID)
       
-      --disable hit projectile
-      local targetProjAbil = hTarget:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
-      targetProjAbil:SetIsDisabled(true)
+      --if hit projectile can be disabled by others
+      local flagCheck = (targetInfo.projectileFlags ~= PROJECTILE_FLAG_OTHERS_CANT_DISABLE)
+      if flagCheck then
+        EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Sven.StormBoltImpact", caster)
+        
+        --disable hit projectile
+        local targetProjAbil = hTarget:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
+        targetProjAbil:SetIsDisabled(true)
 
-      local selfProjAbil = hProjectile:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
-      print("selfProjAil:", selfProjAbil)
-      selfProjAbil:SetIsDisabled(true)
+        local selfProjAbil = hProjectile:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
+        print("selfProjAil:", selfProjAbil)
+        selfProjAbil:SetIsDisabled(true)
 
-      --move this projectile to projectile hit
-      hProjectile:SetAbsOrigin(hTarget:GetAbsOrigin())
+        --move this projectile to projectile hit
+        hProjectile:SetAbsOrigin(hTarget:GetAbsOrigin())
 
-      --store hit data, to be used when projectile is destroyed
-      local hit = {
-        type = HIT_PROJECTILE, --type of hit data
-        hTargetEntIndex = hTarget:entindex(), --entindex of target hit
-        projectileID = selfProjAbil:GetProjectileID() --id of the projectile belonging to this ability
-      }
-      local i = self.counter
-      self.hitData[i] = hit
-      self.counter = self.counter + 1
+        --store hit data, to be used when projectile is destroyed
+        local hit = {
+          type = HIT_PROJECTILE, --type of hit data
+          hTargetEntIndex = hTarget:entindex(), --entindex of target hit
+          projectileID = selfProjAbil:GetProjectileID() --id of the projectile belonging to this ability
+        }
+        local i = self.counter
+        self.hitData[i] = hit
+        self.counter = self.counter + 1
+      end
 
       return false
     end
@@ -113,7 +121,6 @@ function sven_q:OnBrewProjectileDestroyed(projectileID)
         local hTarget = EntIndexToHScript(v.hTargetEntIndex)
         
         if hTarget ~= nil then
-          print("hTarget:", hTarget:GetName())
           if hTarget:IsProjectile() then
             local abil = hTarget:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
             abil:SetIsDisabled(false)

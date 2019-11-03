@@ -162,7 +162,7 @@
 		"AbilityDamage" 					"3"
     "AbilityManaCost"         "0"
     "AbilityCooldown"         "4.0"
-    "AbilityCastRange"        "420"
+    "AbilityCastRange"        "1420"
 
 		"AbilitySpecial"
 		{
