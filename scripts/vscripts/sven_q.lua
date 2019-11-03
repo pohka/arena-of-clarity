@@ -1,5 +1,8 @@
 sven_q = class({})
 
+_G.HIT_PROJECTILE = 0
+_G.HIT_HERO = 0
+
 require("brew_projectile")
 
 function sven_q:OnSpellStart()
@@ -8,8 +11,13 @@ function sven_q:OnSpellStart()
   local direction = custorPos - caster:GetAbsOrigin()
   direction.z = 0
   direction = direction:Normalized()
+
+  if self.hitData == nil then
+    self.hitData = {}
+    self.counter = 0
+  end
   
-  BrewProjectile:CreateLinearProjectile({
+  local projID = BrewProjectile:CreateLinearProjectile({
     owner = caster,
     ability = self,
     speed = self:GetSpecialValueFor("projectile_speed"),
@@ -19,8 +27,10 @@ function sven_q:OnSpellStart()
     effect = "particles/items3_fx/lotus_orb_shield.vpcf",
     deleteOnHit = true,
     deleteOnOwnerKilled = false,
-    maxDuration = 5.0
+    maxDuration = 2.0
   })
+
+
 
   --local target = self:GetCursorTarget()
 
@@ -48,7 +58,7 @@ function sven_q:OnSpellStart()
 
 end
 
-function sven_q:OnBrewProjectileHit(hTarget, vLocation)
+function sven_q:OnBrewProjectileHit(hTarget, hProjectile)
   local caster = self:GetCaster()
   local teamID = caster:GetTeam()
 
@@ -63,37 +73,56 @@ function sven_q:OnBrewProjectileHit(hTarget, vLocation)
         ability = self
       })
       EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Sven.StormBoltImpact", caster)
-    else
-      if hTarget:IsProjectile() then
-        EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Sven.StormBoltImpact", caster)
-        print("hit projectile", hTarget:GetProjectileID())
-        local projID = hTarget:GetProjectileID()
-        BrewProjectile:RemoveProjectile(projID)
-      end
-    end
-    --find all enemy units in radius
-    -- local unitsHit = FindUnitsInRadius(
-    --   teamID,
-    --   hTarget:GetAbsOrigin(),
-    --   nil,
-    --   self:GetSpecialValueFor("aoe"),
-    --   DOTA_UNIT_TARGET_TEAM_ENEMY,
-    --   DOTA_UNIT_TARGET_ALL,
-    --   DOTA_UNIT_TARGET_FLAG_NONE,
-    --   FIND_ANY_ORDER,
-    --   false
-    -- )
-
-    -- local damage = self:GetAbilityDamage()
-    -- local damageType = self:GetAbilityDamageType()
-
-    -- --apply damage to all
-    -- for _,unit in pairs(unitsHit) do
+    elseif hTarget:IsProjectile() then
+      print("is projectile = true")
+      EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Sven.StormBoltImpact", caster)
       
-    --   end
-    -- end
-    
-    --hTarget:EmitSound("Hero_Sven.StormBoltImpact")
+      --disable hit projectile
+      local targetProjAbil = hTarget:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
+      targetProjAbil:SetIsDisabled(true)
+
+      local selfProjAbil = hProjectile:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
+      print("selfProjAil:", selfProjAbil)
+      selfProjAbil:SetIsDisabled(true)
+
+      --move this projectile to projectile hit
+      hProjectile:SetAbsOrigin(hTarget:GetAbsOrigin())
+
+      --store hit data, to be used when projectile is destroyed
+      local hit = {
+        type = HIT_PROJECTILE, --type of hit data
+        hTargetEntIndex = hTarget:entindex(), --entindex of target hit
+        projectileID = selfProjAbil:GetProjectileID() --id of the projectile belonging to this ability
+      }
+      local i = self.counter
+      self.hitData[i] = hit
+      self.counter = self.counter + 1
+
+      return false
+    end
+  end
+
+  return true
+end
+
+function sven_q:OnBrewProjectileDestroyed(projectileID)
+  --release any projectiles that have been disabled
+  for k,v in pairs(self.hitData) do
+    if projectileID == v.projectileID then
+      if v.type == HIT_PROJECTILE then
+        local hTarget = EntIndexToHScript(v.hTargetEntIndex)
+        
+        if hTarget ~= nil then
+          print("hTarget:", hTarget:GetName())
+          if hTarget:IsProjectile() then
+            local abil = hTarget:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
+            abil:SetIsDisabled(false)
+          end
+        end
+      end
+
+      self.hitData[k] = nil
+    end
   end
 end
 

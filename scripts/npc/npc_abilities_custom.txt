@@ -121,7 +121,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"speed" 		"950"
+				"speed" 		"1200"
 			}
 			"02"
 			{
@@ -219,6 +219,15 @@
 				}
 			}
 		}
+	}
+
+	"brew_projectile_abil"
+	{
+		"AbilityBehavior" "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"BaseClass" "ability_lua"
+		"ScriptFile"					"brew_projectile_abil"
+		"AbilityTextureName" "rubick_empty1"
+		"MaxLevel" "1"
 	}
 
 	"sven_q"
