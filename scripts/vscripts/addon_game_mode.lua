@@ -44,8 +44,10 @@ function Precache( context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_items.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_puck.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_sven.vsndevts", context )
-	PrecacheResource( "soundfile", "soundevents/soundevents/game_sounds_heroes/game_sounds_skeleton_king.vsndevts", context )
-	PrecacheResource( "soundfile", "soundevents/soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_skeleton_king.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_sniper.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_tinker.vsndevts", context )
 	
 	
 end

@@ -79,4 +79,41 @@
 		"AttributeBaseStrength" "0"
 		"AttributeBaseIntelligence" "0"
 	}
+
+	"sniper"
+	{
+		"override_hero"				"npc_dota_hero_sniper"
+		"Ability1"						"sniper_q"
+		"Ability2"      			"phase_shit"
+		"Ability3"						"arrow"
+		"Ability4"						"sniper_r"
+		"Ability5"						""
+		"Ability6"						""
+		"Ability7"						""
+		"Ability8"						""
+		"Ability9"						""
+		"Ability10"						""
+		"Ability11"						""
+		"Ability12"						""
+		"Ability13"						""
+		"Ability14"						""
+		"Ability15"						""
+		"Ability16"						""
+		"Ability17"						""
+
+		"MovementSpeed"				"350"
+		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
+		"VisionDaytimeRange"		"1300"
+		"AttackCapabilities"		"DOTA_UNIT_CAP_NO_ATTACK"	
+		"MovementTurnRate"			"100.0"
+
+		"StatusHealth"				"4"
+		"StatusMana"				"100"
+		"StatusHealthRegen" "0"
+		"StatusManaRegen" "1.0"
+		"StatusStartingMana" "0"
+		"AttributeBaseAgility" "0"
+		"AttributeBaseStrength" "0"
+		"AttributeBaseIntelligence" "0"
+	}
 }

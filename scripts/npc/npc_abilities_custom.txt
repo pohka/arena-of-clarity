@@ -169,7 +169,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"projectile_speed" 		"900"
+				"projectile_speed" 		"1050"
 			}
 		}
 	}
@@ -352,6 +352,75 @@
 			{
 				"var_type" 	"FIELD_INTEGER"
 				"projectile_speed" 		"1200"
+			}
+			"02"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"radius" 		"2000"
+			}
+		}
+	}
+
+	"sniper_q"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"sniper_q"
+
+		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_POINT"
+    "AbilityTextureName"     "sniper_shrapnel"
+    "AbilityType"            "DOTA_ABILITY_TYPE_BASIC"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+
+		"AbilityCastRange"        "%max_range"
+		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
+		"AbilityDamage" 					"1"
+		"AbilityManaCost"         "0"
+		"AbilityCooldown"         "1.0"
+
+		"AbilityCastPoint"       	"0.0"
+    "AnimationIgnoresModelScale" "1"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"projectile_speed" 		"900"
+			}
+			"02"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"max_range" 		"1200"
+			}
+		}
+	}
+
+	"sniper_r"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"sniper_r"
+
+		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_POINT"
+    "AbilityTextureName"     "sniper_assassinate"
+    "AbilityType"            "DOTA_ABILITY_TYPE_ULTIMATE"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+
+		"AbilityCastRange"        "2000"
+		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
+		"AbilityDamage" 					"2"
+		"AbilityManaCost"         "100"
+
+		"AbilityCastPoint"       	"0.0"
+    "AnimationIgnoresModelScale" "1"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"projectile_speed" 		"900"
 			}
 			"02"
 			{

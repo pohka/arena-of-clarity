@@ -6,7 +6,7 @@ require("filters")
 require("constants")
 
 --nil will not force a hero selection
-local forceHero = "skeleton_king"
+local forceHero = "sniper"
 
 _G.USE_RELEASE_BUILD = false
 

@@ -191,6 +191,7 @@ end
   canBounce, --optional (default = false, if set to true it will allow bouncing)
   minTimeBetweenBounces -- optional (default = 100/speed),
   projectileFlags, -- optional (PROJECTILE_FLAG_NONE = default) bitwise flags for exception rules
+  deleteOnHitWall, --optional (defaolt = false) will destroy projectile on hitting a wall, then calls OnBrewProjectileHitWall(projectileID)
 ]]
 --creates a linear projectile
 function BrewProjectile:CreateLinearProjectile(info)
@@ -279,6 +280,10 @@ function BrewProjectile:CreateLinearProjectile(info)
   if info.projectileFlags == nil then
     info.projectileFlags = PROJECTILE_FLAG_NONE
   end
+
+  if info.deleteOnHitWall == nil then
+    info.deleteOnHitWall = false
+  end
   
   local id = dummy:GetProjectileID()
   self.data[id]  = info
@@ -343,8 +348,9 @@ function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
   local abil = dummy:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
   if abil:GetIsDisabled() == false then
     dummy:SetAbsOrigin(pos)
-    if proj.canBounce and GameTime:GetTime() - proj.lastBounceTime > proj.minTimeBetweenBounces then
-      BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
+    local bounceCheck = proj.canBounce and GameTime:GetTime() - proj.lastBounceTime > proj.minTimeBetweenBounces
+    if  bounceCheck or proj.deleteOnHitWall then
+      BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, id)
     end
 
     proj.currentDistance = proj.currentDistance + proj.speed * delta
@@ -427,7 +433,7 @@ function BrewProjectile:OnThinkTracking(dummy, id, proj, delta)
   end
 end
 
-function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
+function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID)
   local indexes = { 1, 2, 3, 4, 5 ,6 }
 
   local isDebug = false --set to true to enable debug lines
@@ -435,7 +441,7 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
   if isDebug then
     DebugDrawSphere(dummy:GetAbsOrigin(), Vector(0,255,0), 255, proj.radius, false, delta)
   end
-
+  
   for i=1, #indexes do
     local name = "wall_" .. indexes[i]
     local wall = Entities:FindByName(nil, name)
@@ -456,67 +462,78 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta)
 
       --true there is collision (checking bounding box in world space)
       if pos.x > minPt.x and pos.x < maxPt.x and pos.y > minPt.y and pos.y < maxPt.y then
-        proj.lastBounceTime = GameTime:GetTime()
-        local normal = nil
-
-        -- if indexes[i] == 4 then
-        --   print("Impact:")
-        --   print("center:", center)
-        --   print("rect pts: min:", minPt.x, minPt.y, " max:", maxPt.x, maxPt.y)
-        --   print("rotated proj pos:", pos.x, pos.y)
-        -- end
-
-        --4 sided reflection (can be buggy at obtuse angles roughly 160-180 degrees)
-        -- if pos.y > startingSize.y then
-        --   normal = Vector(0, 1, 0)
-        -- elseif pos.y < -startingSize.y then
-        --   normal = Vector(0, -1, 0)
-        -- elseif pos.x < 0 then
-        --   normal = Vector(-1, 0, 0)
-        -- else
-        --   normal = Vector(1, 0, 0)
-        -- end
-
-        --2 sided reflection for 90 degree walls
-        if pos.x < 0 then
-          normal = Vector(-1, 0, 0)
+        --delete on hit wall case
+        if proj.deleteOnHitWall then
+          if proj.ability.OnBrewProjectileHitWall ~= nil then
+            proj.ability:OnBrewProjectileHitWall(projID)
+          end
+          BrewProjectile:RemoveProjectile(projID)
+          i = #indexes
+        --bouncing case
         else
-          normal = Vector(1, 0, 0)
-        end
 
-        --hack for 45 degree walls
-        if angles.y % 90 > 1.0 then
+          proj.lastBounceTime = GameTime:GetTime()
+          local normal = nil
+
+          -- if indexes[i] == 4 then
+          --   print("Impact:")
+          --   print("center:", center)
+          --   print("rect pts: min:", minPt.x, minPt.y, " max:", maxPt.x, maxPt.y)
+          --   print("rotated proj pos:", pos.x, pos.y)
+          -- end
+
+          --4 sided reflection (can be buggy at obtuse angles roughly 160-180 degrees)
+          -- if pos.y > startingSize.y then
+          --   normal = Vector(0, 1, 0)
+          -- elseif pos.y < -startingSize.y then
+          --   normal = Vector(0, -1, 0)
+          -- elseif pos.x < 0 then
+          --   normal = Vector(-1, 0, 0)
+          -- else
+          --   normal = Vector(1, 0, 0)
+          -- end
+
+          --2 sided reflection for 90 degree walls
           if pos.x < 0 then
-            normal = Vector(0, -1, 0)
+            normal = Vector(-1, 0, 0)
           else
-            normal = Vector(0, 1, 0)
-          end 
-        end
-
-        --rotate normal to be axis aligned (probably wrong because of 45 degree hack)
-        normal = vmath:RotateAround(normal, Vector(0,0,0), -angles.y)
-        --DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + normal * 400, 255, 0, 255, false, 5.0)
-
-        if normal ~= nil then
-          if isDebug == true then
-            --draw normal (red line)
-            DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + normal * 400, 255, 0, 0, false, 5.0)
-            --draw in angle (green line)
-            DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() - proj.direction * 400, 0, 255, 0, false, 5.0)
+            normal = Vector(1, 0, 0)
           end
-          local d = proj.direction
-          local d_dot_n = d:Dot(normal)
-          proj.direction = d - 2 * d_dot_n * normal --reflection formula d-2(d.n)*n
 
-          if isDebug == true then
-            --draw out angle (blue line)
-            DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + proj.direction * 800, 0, 0, 255, false, 5.0)
-            color = Vector(255,0,0)
+          --hack for 45 degree walls
+          if angles.y % 90 > 1.0 then
+            if pos.x < 0 then
+              normal = Vector(0, -1, 0)
+            else
+              normal = Vector(0, 1, 0)
+            end 
           end
-        end
 
-        if isDebug then
-          DebugDrawBoxDirection(center, -size, size, normal, color, 50, 2.0)
+          --rotate normal to be axis aligned (probably wrong because of 45 degree hack)
+          normal = vmath:RotateAround(normal, Vector(0,0,0), -angles.y)
+          --DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + normal * 400, 255, 0, 255, false, 5.0)
+
+          if normal ~= nil then
+            if isDebug == true then
+              --draw normal (red line)
+              DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + normal * 400, 255, 0, 0, false, 5.0)
+              --draw in angle (green line)
+              DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() - proj.direction * 400, 0, 255, 0, false, 5.0)
+            end
+            local d = proj.direction
+            local d_dot_n = d:Dot(normal)
+            proj.direction = d - 2 * d_dot_n * normal --reflection formula d-2(d.n)*n
+
+            if isDebug == true then
+              --draw out angle (blue line)
+              DebugDrawLine(dummy:GetAbsOrigin(), dummy:GetAbsOrigin() + proj.direction * 800, 0, 0, 255, false, 5.0)
+              color = Vector(255,0,0)
+            end
+          end
+
+          if isDebug then
+            DebugDrawBoxDirection(center, -size, size, normal, color, 50, 2.0)
+          end
         end
       end
 
