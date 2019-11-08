@@ -169,7 +169,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"projectile_speed" 		"1050"
+				"projectile_speed" 		"1350"
 			}
 		}
 	}
@@ -264,7 +264,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"projectile_speed" 		"900"
+				"projectile_speed" 		"1000"
 			}
 			"02"
 			{
@@ -351,7 +351,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"projectile_speed" 		"1200"
+				"projectile_speed" 		"1350"
 			}
 			"02"
 			{
@@ -376,7 +376,7 @@
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
 		"AbilityDamage" 					"1"
 		"AbilityManaCost"         "0"
-		"AbilityCooldown"         "1.0"
+		"AbilityCooldown"         "0.5"
 
 		"AbilityCastPoint"       	"0.0"
     "AnimationIgnoresModelScale" "1"
@@ -407,9 +407,9 @@
     "MaxLevel"               "1"
     "RequiredLevel"          "1"
 
-		"AbilityCastRange"        "2000"
+		"AbilityCastRange"        "%max_range"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"2"
+		"AbilityDamage" 					"3"
 		"AbilityManaCost"         "100"
 
 		"AbilityCastPoint"       	"0.0"
@@ -420,12 +420,17 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"projectile_speed" 		"900"
+				"projectile_speed" 		"1500"
 			}
 			"02"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"radius" 		"2000"
+				"max_range" 		"5000"
+			}
+			"03"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"path_width" 		"100"
 			}
 		}
 	}

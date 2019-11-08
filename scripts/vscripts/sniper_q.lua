@@ -56,5 +56,4 @@ function sniper_q:OnBrewProjectileHitWall(projectileID)
   if projUnit ~= nil then
     EmitSoundOnLocationWithCaster(projUnit:GetAbsOrigin(), "Hero_Tinker.Heat-Seeking_Missile.Impact", self:GetCaster())
   end
-  --EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Tinker.Heat-Seeking_Missile.Impact", caster)
 end

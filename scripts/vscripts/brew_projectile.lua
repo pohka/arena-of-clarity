@@ -35,6 +35,13 @@
   Will trigger when the unit projectile is being destroyed
   projectileID = id of projectile being destroyed
 
+  - OnBrewProjectileHitWall()
+
+
+  - OnBrewProjectileThink(projectileID)
+  must return value of interval time between each think
+  e.g. return 1 will call the think once every second
+
 
   STATES
   -----------
@@ -176,6 +183,7 @@ end
   direction, --normalized vector
   spawnOrigin,
   radius,
+  model, --model name for dummy
   effect, --particle effect string path
   attachType, --optional (default = PATTACH_ABSORIGIN_FOLLOW)
   deleteOnHit, --optional (default = true)
@@ -204,6 +212,17 @@ function BrewProjectile:CreateLinearProjectile(info)
     teamID = info.teamID
   })
   
+  if info.model ~= nil then
+    dummy:SetModel(info.model)
+    dummy:SetForwardVector(info.direction)
+  end
+
+  if info.ability.OnBrewProjectileThink ~= nil then
+    info.canThink = true
+    info.nextThinkTime = GameTime:GetTime()
+  else
+    info.canThink = false
+  end
 
 
   if info.groundHeight == nil then
@@ -331,6 +350,13 @@ function BrewProjectile:OnThink()
         elseif proj.type == PROJECTILE_TYPE_TRACKING then
           BrewProjectile:OnThinkTracking(dummy, id, proj, delta)
         end
+
+        if proj.canThink == true and proj.nextThinkTime <= now then
+          local result = proj.ability:OnBrewProjectileThink(id)
+          if result ~= nil then
+            proj.nextThinkTime = proj.nextThinkTime + result
+          end
+        end
       end
     end
   end
@@ -442,6 +468,7 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
     DebugDrawSphere(dummy:GetAbsOrigin(), Vector(0,255,0), 255, proj.radius, false, delta)
   end
   
+  local isRemoved = false
   for i=1, #indexes do
     local name = "wall_" .. indexes[i]
     local wall = Entities:FindByName(nil, name)
@@ -468,7 +495,7 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
             proj.ability:OnBrewProjectileHitWall(projID)
           end
           BrewProjectile:RemoveProjectile(projID)
-          i = #indexes
+          break -- end loop
         --bouncing case
         else
 
@@ -612,6 +639,18 @@ function BrewProjectile:CreateTrackingProjectile(info)
     teamID = proj.teamID
   })
  -- local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, proj.teamID)
+
+  if info.model ~= nil then
+    dummy:SetModel(info.model)
+    dummy:SetForwardVector(info.direction)
+  end
+
+  if info.ability.OnBrewProjectileThink ~= nil then
+    proj.canThink = true
+    proj.nextThinkTime = GameTime:GetTime()
+  else
+    proj.canThink = false
+  end
 
   --set z offset
   if info.groundHeight == nil then
