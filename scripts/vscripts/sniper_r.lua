@@ -4,6 +4,7 @@ require("abil_helper")
 require("game_time")
 require("task")
 require("query")
+require("constants")
 
 
 function sniper_r:OnSpellStart()
@@ -103,7 +104,7 @@ function sniper_r:think( kv )
       DOTA_UNIT_TARGET_TEAM_ENEMY,
       DOTA_UNIT_TARGET_HERO,
       DOTA_UNIT_TARGET_FLAG_NONE,
-      100
+      Z_MAX_DIFF
     )
 
     --apply damage
@@ -152,6 +153,8 @@ function sniper_r:OnBrewProjectileHit(hTarget, hProjectile)
       damage_type = DAMAGE_TYPE_PURE,
       ability = self
     })
+
+    self.path_end = hTarget:GetAbsOrigin()
     EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Tinker.Heat-Seeking_Missile.Impact", self:GetCaster())
   end
 end

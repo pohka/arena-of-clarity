@@ -409,7 +409,7 @@
 
 		"AbilityCastRange"        "%max_range"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"3"
+		"AbilityDamage" 					"2"
 		"AbilityManaCost"         "100"
 
 		"AbilityCastPoint"       	"0.0"

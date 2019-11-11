@@ -403,7 +403,7 @@ function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
       false
     )
 
-    local zMaxDiff = 100
+    local zMaxDiff = Z_MAX_DIFF
     
 
     local hasFoundTarget = false

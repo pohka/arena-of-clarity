@@ -73,11 +73,11 @@ end
 function pangolier_q_modifier:OnDestroy()
   if IsServer() then
     local parent = self:GetParent()
-    FindClearSpaceForUnit(parent, self.end_point, true)
-
+    
     if parent:IsAlive() then
+      FindClearSpaceForUnit(parent, self.end_point, true)
       local radius = self:GetAbility():GetAOERadius()
-      
+
       local units = FindUnitsInRadius(
         parent:GetTeam(),
         parent:GetAbsOrigin(),
@@ -107,6 +107,8 @@ function pangolier_q_modifier:OnDestroy()
         PATTACH_ABSORIGIN,
         parent
       )
+    else
+      FindClearSpaceForUnit(parent, parent:GetAbsOrigin(), false)
     end
   end
 end
