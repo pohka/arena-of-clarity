@@ -191,6 +191,7 @@ function CustomGameState:OnNextRound( event )
     self:DestroyPhysicalItems()
     self:SpawnItems()
     BrewProjectile:RemoveAllProjectiles()
+    self:ClearAllAbilitys()
   end
 
   print("Round " .. event.round .. " begin: ".. GameTime:GetTime())
@@ -566,3 +567,29 @@ function CustomGameState:DestroyPhysicalItems()
   end
 end
 
+--cleans up all abilities with lingering effects
+function CustomGameState:ClearAllAbilitys()
+  local units = FindUnitsInRadius(
+    DOTA_TEAM_BADGUYS,
+    Vector(0,0,0),
+    nil,
+    FIND_UNITS_EVERYWHERE,
+    DOTA_UNIT_TARGET_TEAM_BOTH,
+    DOTA_UNIT_TARGET_ALL,
+    DOTA_UNIT_TARGET_FLAG_NONE,
+    FIND_ANY_ORDER,
+    false
+  )
+
+  for _,unit in pairs(units) do
+    local count = unit:GetAbilityCount() - 1
+    for i=0, count do
+      local abil = unit:GetAbilityByIndex(i)
+      if abil ~= nil then
+        if abil.AbilityClear ~= nil then
+          abil:AbilityClear()
+        end
+      end
+    end
+  end
+end

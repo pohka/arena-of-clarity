@@ -13,3 +13,16 @@ function Query:findItemByName(unit, itemName)
   end
   return nil
 end
+
+function Query:FindAbilityByName(unit, abilityName)
+  local count = unit:GetAbilityCount() - 1
+  for i=0, count do
+    local abil = unit:GetAbilityByIndex(i)
+    if abil ~= nil then
+      if abil:GetName() == abilityName then
+        return abil
+      end
+    end
+  end
+  return nil
+end

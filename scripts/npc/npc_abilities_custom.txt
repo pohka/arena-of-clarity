@@ -432,6 +432,11 @@
 				"var_type" 	"FIELD_INTEGER"
 				"path_width" 		"100"
 			}
+			"04"
+			{
+				"var_type" 	"FIELD_FLOAT"
+				"fire_duration" 		"8.0"
+			}
 		}
 	}
 }
