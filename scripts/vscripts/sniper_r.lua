@@ -144,6 +144,13 @@ function sniper_r:OnBrewProjectileHit(hTarget, hProjectile)
   local proj = BrewProjectile:GetProjectileInfo(id)
   for k,v in pairs(proj) do print(k,v) end print("-----")
   if hTarget ~= nil then
+    ApplyDamage({
+      victim = hTarget,
+      attacker = self:GetCaster(),
+      damage = self:GetAbilityDamage(),
+      damage_type = DAMAGE_TYPE_PURE,
+      ability = self
+    })
     EmitSoundOnLocationWithCaster(hTarget:GetAbsOrigin(), "Hero_Tinker.Heat-Seeking_Missile.Impact", self:GetCaster())
   end
 end
