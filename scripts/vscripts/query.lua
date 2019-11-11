@@ -26,3 +26,29 @@ function Query:FindAbilityByName(unit, abilityName)
   end
   return nil
 end
+
+
+function Query:FindUnitsInLine(teamNumber, startPt, endPt, cacheUnit, width, teamFilter, typeFilter, flagFilter, zMaxDiff)
+  local units = FindUnitsInLine(
+    teamNumber,
+    startPt,
+    endPt,
+    cacheUnit,
+    width,
+    teamFilter,
+    typeFilter,
+    flagFilter
+  )
+
+  local result = {}
+  for _,unit in pairs(units) do
+    local groundH = GetGroundHeight(unit:GetAbsOrigin(), unit)
+    local currentH = unit:GetAbsOrigin().z
+
+    if currentH - groundH <= zMaxDiff then
+      table.insert(result, unit)
+    end
+  end
+
+  return result
+end

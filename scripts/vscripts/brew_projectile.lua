@@ -403,12 +403,15 @@ function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
       false
     )
 
+    local zMaxDiff = 100
+    
+
     local hasFoundTarget = false
     for _,target in pairs(units) do
       if hasFoundTarget == false then
         --check z-axis
         local targetPos = target:GetAbsOrigin()
-        if targetPos.z - projZ < 1000 then
+        if targetPos.z - projZ < zMaxDiff then
           hasFoundTarget = true
           
           local isAllowedToDeleteOnHit = true
@@ -497,7 +500,7 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
         if proj.deleteOnHitWall then
           BrewProjectile:RemoveProjectile(projID)
           break -- end loop
-          
+
         --bouncing case
         else
 

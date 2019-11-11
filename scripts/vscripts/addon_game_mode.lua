@@ -38,8 +38,8 @@ function Precache( context )
 	PrecacheResource( "particle", "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_tinker/tinker_rockets_arrow.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/batrider/batrider_ti8_immortal_mount/batrider_ti8_immortal_firefly.vpcf", context )
-	
-	
+	PrecacheResource( "particle", "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf", context )
+
 	
 	
 	

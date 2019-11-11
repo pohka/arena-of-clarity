@@ -7,5 +7,6 @@
 {
 	"npc_dota_hero_sven"							"-1"
 	"npc_dota_hero_skeleton_king"			"-1"
-	"npc_dota_hero_sniper"			"-1"
+	"npc_dota_hero_sniper"						"-1"
+	"npc_dota_hero_pangolier" 				"-1"
 }

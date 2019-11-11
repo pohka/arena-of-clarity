@@ -439,4 +439,39 @@
 			}
 		}
 	}
+
+	"pangolier_q"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"pangolier_q"
+
+		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
+    "AbilityTextureName"     "tusk_walrus_kick"
+    "AbilityType"            "DOTA_ABILITY_TYPE_ULTIMATE"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+
+		"AbilityCastRange"        "800"
+		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
+		"AbilityDamage" 					"2"
+		"AbilityManaCost"         "0"
+		"AbilityCooldown"         "2"
+
+		"AbilityCastPoint"       	"0.0"
+    "AnimationIgnoresModelScale" "1"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_FLOAT"
+				"jump_time" 		"0.5"
+			}
+			"02"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"radius" 		"350"
+			}
+		}
+	}
 }

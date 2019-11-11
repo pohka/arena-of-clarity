@@ -94,7 +94,7 @@ function sniper_r:think( kv )
     self.nextDamageTickTime = self.nextDamageTickTime + self.damageTickRate
 
     --find units in path
-    local units = FindUnitsInLine(
+    local units = Query:FindUnitsInLine(
       caster:GetTeam(),
       self.path_start,
       self.path_end,
@@ -102,7 +102,8 @@ function sniper_r:think( kv )
       self.path_width,
       DOTA_UNIT_TARGET_TEAM_ENEMY,
       DOTA_UNIT_TARGET_HERO,
-      DOTA_UNIT_TARGET_FLAG_NONE
+      DOTA_UNIT_TARGET_FLAG_NONE,
+      100
     )
 
     --apply damage
