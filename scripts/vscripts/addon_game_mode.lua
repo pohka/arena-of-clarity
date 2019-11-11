@@ -39,7 +39,7 @@ function Precache( context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_tinker/tinker_rockets_arrow.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/batrider/batrider_ti8_immortal_mount/batrider_ti8_immortal_firefly.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf", context )
-
+	PrecacheResource( "particle", "particles/econ/items/pangolier/pangolier_ti8_immortal/pangolier_ti8_immortal_shield_crash.vpcf", context )
 	
 	
 	
@@ -53,7 +53,7 @@ function Precache( context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_tinker.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_batrider.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_bounty_hunter.vsndevts", context )
-	
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_pangolier.vsndevts", context )
 end
 
 -- Create the game mode when we activate

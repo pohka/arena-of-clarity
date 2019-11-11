@@ -7,7 +7,7 @@ function pangolier_q:OnSpellStart()
   local target = self:GetCursorPosition()
   kv.x = target.x
   kv.y = target.y
-  
+  caster:MoveToPosition(target)
   caster:AddNewModifier(caster, self, "pangolier_q_modifier", kv)
 end
 
