@@ -489,13 +489,15 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
 
       --true there is collision (checking bounding box in world space)
       if pos.x > minPt.x and pos.x < maxPt.x and pos.y > minPt.y and pos.y < maxPt.y then
+        if proj.ability.OnBrewProjectileHitWall ~= nil then
+          proj.ability:OnBrewProjectileHitWall(projID)
+        end
+
         --delete on hit wall case
         if proj.deleteOnHitWall then
-          if proj.ability.OnBrewProjectileHitWall ~= nil then
-            proj.ability:OnBrewProjectileHitWall(projID)
-          end
           BrewProjectile:RemoveProjectile(projID)
           break -- end loop
+          
         --bouncing case
         else
 

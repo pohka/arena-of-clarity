@@ -28,12 +28,13 @@ function arrow:OnSpellStart()
     providesVision = true,
     visionRadius = 350,
     unitTargetType = DOTA_UNIT_TARGET_HERO,
-    effect = "particles/econ/items/omniknight/omni_ti8_head/omniknight_repel_buff_ti8_body_glow.vpcf",
+    effect = "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf",
     canBounce = true,
-    maxDuration = 8.0
+    maxDuration = 8.0,
+    groundHeight = 40
   })
 
-  caster:EmitSound("Hero_Mirana.ArrowCast")
+  caster:EmitSound("Hero_BountyHunter.Shuriken")
 end
 
 
@@ -49,8 +50,19 @@ function arrow:OnBrewProjectileHit(hTarget, vLocation)
       ability = self
     })
 
-    hTarget:EmitSound("Hero_Mirana.ArrowImpact")
+    hTarget:EmitSound("Hero_BountyHunter.Shuriken.Impact")
   end
 
   return true
+end
+
+function arrow:OnBrewProjectileHitWall(projID)
+  local projUnit = BrewProjectile:GetProjectileUnit(projID)
+  if projUnit ~= nil then
+    EmitSoundOnLocationWithCaster(
+      projUnit:GetAbsOrigin(),
+      "Hero_BountyHunter.Shuriken.Impact",
+      projUnit
+    )
+  end
 end
