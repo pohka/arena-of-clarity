@@ -31,32 +31,7 @@ function sven_q:OnSpellStart()
     projectileFlags = PROJECTILE_FLAG_OTHERS_CANT_DISABLE
   })
 
-
-
-  --local target = self:GetCursorTarget()
-
-  --if target ~= nil then
-    -- BrewProjectile:CreateTrackingProjectile({
-    --   target = target,
-    --   owner = caster,
-    --   ability = self,
-    --   effect = "particles/items3_fx/lotus_orb_shield.vpcf",
-    --   --attachType = PATTACH_ABSORIGIN_FOLLOW,
-    --   speed = self:GetSpecialValueFor("projectile_speed"),
-    --  -- radius = 64, --optional (default = 32)
-    --   isDodgeable = true,
-    --   maxDuration = 10.0,
-    --   providesVision = false,
-    --   --visionRadius = 400,
-    --   --groundHeight, --optional (default = 100)
-    --   deleteOnOwnerKilled = true,
-    --   spawnOrigin = caster:GetAbsOrigin()
-    -- })
-
-   -- caster:EmitSound("Hero_Sven.StormBolt")
-  --end
-
-
+  caster:EmitSound("Hero_Sven.StormBolt")
 end
 
 function sven_q:OnBrewProjectileHit(hTarget, hProjectile)

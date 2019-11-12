@@ -14,9 +14,14 @@ function item_custom_blink:OnSpellStart()
     local castDistance = diff:Length2D()
 
     local maxRange = self:GetSpecialValueFor("max_range")
-    --local penaltyRange = self:GetSpecialValueFor("penalty_range")
 
-    ParticleManager:CreateParticle("particles/econ/events/nexon_hero_compendium_2014/blink_dagger_end_glow_nexon_hero_cp_2014.vpcf", PATTACH_ABSORIGIN, caster)
+    
+    local fxIndex = ParticleManager:CreateParticle(
+      "particles/econ/events/nexon_hero_compendium_2014/blink_dagger_start_nexon_hero_cp_2014.vpcf",
+      PATTACH_POINT,
+      caster
+    )
+    ParticleManager:SetParticleControl(fxIndex, 0, casterPt)
 
     --dodge projectile
     BrewProjectile:Dodge(caster)
@@ -28,6 +33,12 @@ function item_custom_blink:OnSpellStart()
     else
       position = caster:GetAbsOrigin() + (direction * castDistance)
     end
+
+    ParticleManager:CreateParticle(
+      "particles/econ/events/nexon_hero_compendium_2014/blink_dagger_end_glow_nexon_hero_cp_2014.vpcf",
+      PATTACH_ABSORIGIN,
+      caster
+    )
 
     
     caster:EmitSound( "DOTA_Item.BlinkDagger.Activate")

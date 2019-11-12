@@ -17,13 +17,13 @@ function sniper_q:OnSpellStart()
     end
 
 
-    BrewProjectile:CreateLinearProjectile({
+    local projID = BrewProjectile:CreateLinearProjectile({
       owner = caster,
       ability = self,
       speed = self:GetSpecialValueFor("projectile_speed"),
       direction = dir,
       spawnOrigin = caster:GetAbsOrigin(),
-      radius = 32,
+      radius = 50,
       effect = "particles/units/heroes/hero_tinker/tinker_rockets_arrow.vpcf",
       deleteOnHit = true,
       deleteOnOwnerKilled = false,
@@ -32,6 +32,14 @@ function sniper_q:OnSpellStart()
       maxDistance = self:GetSpecialValueFor("max_range"),
       unitTargetType = DOTA_UNIT_TARGET_HERO
     })
+
+    local projInfo = BrewProjectile:GetProjectileInfo(projID)
+    if projInfo ~= nil then
+      print("forward", projInfo.particleIndex)
+      local up = Vector(0,0,1)
+      local right = up:Cross(dir)
+      ParticleManager:SetParticleControlOrientation(projInfo.particleIndex, 0, dir, right, up)
+    end
   end
 
   EmitSoundOnLocationWithCaster(caster:GetAbsOrigin(), "Hero_Tinker.Heat-Seeking_Missile", caster)

@@ -211,12 +211,14 @@ function BrewProjectile:CreateLinearProjectile(info)
     spawnOrigin = info.spawnOrigin,
     teamID = info.teamID
   })
+  dummy:SetForwardVector(info.direction)
+
   
   if info.model ~= nil then
     dummy:SetModel(info.model)
-    dummy:SetForwardVector(info.direction)
   end
 
+  
   if info.ability.OnBrewProjectileThink ~= nil then
     info.canThink = true
     info.nextThinkTime = GameTime:GetTime()
@@ -233,9 +235,9 @@ function BrewProjectile:CreateLinearProjectile(info)
 
   --attach particle effect
   if info.attachType == nil then
-    ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
+    info.particleIndex = ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
   else
-    ParticleManager:CreateParticle(info.effect, info.attachType, dummy)
+    info.particleIndex = ParticleManager:CreateParticle(info.effect, info.attachType, dummy)
   end
   info.attachType = nil
   
@@ -588,6 +590,10 @@ function BrewProjectile:RemoveProjectile(projectileID)
         proj.ability:OnBrewProjectileDestroyed(projectileID)
       end
       
+      if proj.particleIndex ~= nil then
+        ParticleManager:DestroyParticle(proj.particleIndex, true)
+      end
+      
       dummy:AddNoDraw()
       dummy:ForceKill(false)
       dummy:RemoveSelf()
@@ -643,12 +649,14 @@ function BrewProjectile:CreateTrackingProjectile(info)
     spawnOrigin = info.spawnOrigin,
     teamID = proj.teamID
   })
- -- local dummy = CreateUnitByName("dummy_unit", info.spawnOrigin, true, nil, nil, proj.teamID)
+  dummy:SetForwardVector(info.direction)
 
   if info.model ~= nil then
     dummy:SetModel(info.model)
-    dummy:SetForwardVector(info.direction)
   end
+
+  
+  
 
   if info.ability.OnBrewProjectileThink ~= nil then
     proj.canThink = true
@@ -668,9 +676,9 @@ function BrewProjectile:CreateTrackingProjectile(info)
 
    --attach particle effect
   if info.attachType == nil then
-    ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
+    proj.particleIndex = ParticleManager:CreateParticle(info.effect, PATTACH_ABSORIGIN_FOLLOW, dummy)
   else
-    ParticleManager:CreateParticle(info.effect, info.attachType, dummy)
+    proj.particleIndex = ParticleManager:CreateParticle(info.effect, info.attachType, dummy)
   end
   
   proj.entindex = dummy:entindex()
