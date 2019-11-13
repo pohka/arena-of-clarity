@@ -9,7 +9,7 @@
 		"ScriptFile"					"item_custom_blink.lua"
 
 		"AbilityCastPoint"				"0.0"
-		"AbilityCooldown"				"10.0"
+		"AbilityCooldown"				"9.0"
 
 		"ItemStackable"					"0"
 		"ItemShareability"				"ITEM_NOT_SHAREABLE"

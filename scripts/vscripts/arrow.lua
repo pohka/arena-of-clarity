@@ -23,14 +23,14 @@ function arrow:OnSpellStart()
     direction = direction,
     spawnOrigin = caster:GetAbsOrigin(),
     radius = 64,
-    maxDistance = 5000,
+ --   maxDistance = 5000,
     deleteOnOwnerKilled = true,
     providesVision = true,
     visionRadius = 350,
     unitTargetType = DOTA_UNIT_TARGET_HERO,
     effect = "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf",
     canBounce = true,
-    maxDuration = 8.0,
+    maxDuration = 5.0,
     groundHeight = 40
   })
 
