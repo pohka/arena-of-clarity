@@ -65,7 +65,7 @@ function GameSetup:init()
 
     --disable FoW
     GameMode:SetFogOfWarDisabled(true)
-    
+    GameMode:SetCameraDistanceOverride(1300)
     
   --=================================
   --RELEASE BUILD
@@ -112,6 +112,8 @@ function GameSetup:init()
 
     --disable FoW
     GameMode:SetFogOfWarDisabled(true)
+
+    GameMode:SetCameraDistanceOverride(1300)
     
     --listen to game state event
     ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(self, "OnStateChange"), self)
