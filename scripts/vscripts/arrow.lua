@@ -34,6 +34,8 @@ function arrow:OnSpellStart()
     groundHeight = 40
   })
 
+  caster:MoveToPosition(caster:GetAbsOrigin() + direction)
+
   caster:EmitSound("Hero_BountyHunter.Shuriken")
 end
 

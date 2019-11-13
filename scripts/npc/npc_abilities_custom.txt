@@ -376,4 +376,39 @@
 			}
 		}
 	}
+
+	"pangolier_r"
+	{
+		"BaseClass"           "ability_lua"
+		"ScriptFile"					"pangolier_r"
+
+		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_POINT"
+    "AbilityTextureName"     "mars_gods_rebuke"
+    "AbilityType"            "DOTA_ABILITY_TYPE_ULTIMATE"
+    "MaxLevel"               "1"
+    "RequiredLevel"          "1"
+
+	//	"AbilityCastRange"        "%distance"
+		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
+		"AbilityDamage" 					"3"
+		"AbilityManaCost"         "100"
+		"AbilityCooldown"         "0"
+
+		"AbilityCastPoint"       	"0.0"
+    "AnimationIgnoresModelScale" "1"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"distance" 		"700"
+			}
+			"02"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"angle" 		"35"
+			}
+		}
+	}
 }

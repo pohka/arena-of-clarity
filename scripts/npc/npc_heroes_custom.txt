@@ -123,7 +123,7 @@
 		"Ability1"						"pangolier_q"
 		"Ability2"      			"phase_shit"
 		"Ability3"						"arrow"
-		"Ability4"						""
+		"Ability4"						"pangolier_r"
 		"Ability5"						"hero_spawn_booter"
 		"Ability6"						""
 		"Ability7"						""

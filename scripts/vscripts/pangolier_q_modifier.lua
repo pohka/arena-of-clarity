@@ -115,8 +115,7 @@ end
 
 function pangolier_q_modifier:CheckState()
 	local state = {
-    [MODIFIER_STATE_MUTED] = true,
-    [MODIFIER_STATE_SILENCED] = true
+    [MODIFIER_STATE_STUNNED] = true
 	}
 
 	return state

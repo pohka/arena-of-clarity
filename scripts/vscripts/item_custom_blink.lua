@@ -46,7 +46,9 @@ function item_custom_blink:OnSpellStart()
     FindClearSpaceForUnit(caster, position, true)
 
     --face forward
+    caster:SetForwardVector(direction)
     caster:MoveToPosition(position + direction)
+    
   end
 end
 

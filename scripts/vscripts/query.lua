@@ -40,6 +40,10 @@ function Query:FindUnitsInLine(teamNumber, startPt, endPt, cacheUnit, width, tea
     flagFilter
   )
 
+  if zMaxDiff == nil then
+    return units
+  end
+
   local result = {}
   for _,unit in pairs(units) do
     local groundH = GetGroundHeight(unit:GetAbsOrigin(), unit)
@@ -47,6 +51,79 @@ function Query:FindUnitsInLine(teamNumber, startPt, endPt, cacheUnit, width, tea
 
     if currentH - groundH <= zMaxDiff then
       table.insert(result, unit)
+    end
+  end
+
+  return result
+end
+
+function Query:FindUnitsRadius(teamNumber, position, cacheUnit, radius, teamFilter, typeFilter, flagFilter, order, cacheCanGrow, zMaxDiff)
+  local units = FindUnitsInRadius(
+    teamNumber,
+    position,
+    cacheUnit,
+    radius,
+    teamFilter,
+    typeFilter,
+    flagFilter,
+    order,
+    cacheCanGrow
+  )
+
+  if zMaxDiff == nil then
+    return units
+  end
+
+  local result = {}
+  for _,unit in pairs(units) do
+    local groundH = GetGroundHeight(unit:GetAbsOrigin(), unit)
+    local currentH = unit:GetAbsOrigin().z
+
+    if currentH - groundH <= zMaxDiff then
+      table.insert(result, unit)
+    end
+  end
+
+  return result
+end
+
+--find units in sector shape (e.g. 90 degrees is a semi circle)
+--angle in degrees from 0-180
+function Query:FindUnitsSector(teamNumber, position, forward, angle, cacheUnit, radius, teamFilter, typeFilter, flagFilter, order, cacheCanGrow, zMaxDiff)
+  local units = FindUnitsInRadius(
+    teamNumber,
+    position,
+    cacheUnit,
+    radius,
+    teamFilter,
+    typeFilter,
+    flagFilter,
+    order,
+    cacheCanGrow
+  )
+
+  local result = {}
+  for _,unit in pairs(units) do
+    local isValid = true
+    if zMaxDiff ~= nil then
+      local groundH = GetGroundHeight(unit:GetAbsOrigin(), unit)
+      local currentH = unit:GetAbsOrigin().z
+
+      if currentH - groundH <= zMaxDiff == false then
+        --table.insert(result, unit)
+        isValid = false
+      end
+    end
+
+    if isValid == true then
+      local diff = unit:GetAbsOrigin() - position
+      diff.z = 0
+      local dir = diff:Normalized()
+      local dot = dir:Dot(forward)
+      local angleDiff = math.deg(math.acos(dot)) --arccos and then converting from radians to degrees
+      if angleDiff <= angle then
+        table.insert(result, unit)
+      end
     end
   end
 
