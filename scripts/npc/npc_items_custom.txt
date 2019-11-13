@@ -181,7 +181,7 @@
 			"02"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"hp"				"2"
+				"hp"				"2000"
 			}
 		}
   }
@@ -215,7 +215,7 @@
 			"02"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"hp"				"3"
+				"hp"				"3000"
 			}
 		}
   }
@@ -249,7 +249,7 @@
 			"02"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"hp"				"4"
+				"hp"				"4000"
 			}
 		}
   }

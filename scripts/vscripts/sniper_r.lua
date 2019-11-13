@@ -112,7 +112,7 @@ function sniper_r:think( kv )
       ApplyDamage({
         victim = unit,
         attacker = caster,
-        damage = 1,
+        damage = self:GetSpecialValueFor("damage_per_tick"),
         damage_type = DAMAGE_TYPE_PURE,
         ability = self
       })

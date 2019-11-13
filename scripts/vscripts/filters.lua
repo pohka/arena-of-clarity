@@ -123,7 +123,7 @@ function Filters:AddDamageFilter()
       
       if attacker ~= nil then
         if attacker:HasModifier("sven_r_modifier") then
-          event.damage = event.damage + 1
+          event.damage = event.damage + 1000
         end
       end
 

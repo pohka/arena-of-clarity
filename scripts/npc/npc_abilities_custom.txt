@@ -10,7 +10,7 @@
 
 		"AbilityBehavior"     "DOTA_ABILITY_BEHAVIOR_POINT"
 		"AbilityTextureName"     "bounty_hunter_shuriken_toss"
-		"AbilityDamage" 					"2"
+		"AbilityDamage" 					"2000"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
 		"MaxLevel"               "1"
     "RequiredLevel"          "1"
@@ -61,7 +61,7 @@
     "AnimationIgnoresModelScale" "1"
 
     // Stats
-		"AbilityDamage" 					"2"
+		"AbilityDamage" 					"2000"
     "AbilityManaCost"         "0"
     "AbilityCooldown"         "5.0"
     "AbilityCastRange"        "1500"
@@ -155,7 +155,7 @@
     "AnimationIgnoresModelScale" "1"
 
     // Stats
-		"AbilityDamage" 					"3"
+		"AbilityDamage" 					"3000"
     "AbilityManaCost"         "0"
     "AbilityCooldown"         "2.0"
     "AbilityCastRange"        "1000"
@@ -240,9 +240,8 @@
     "MaxLevel"               "1"
     "RequiredLevel"          "1"
 
-		"AbilityCastRange"        "%radius"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"2"
+		"AbilityDamage" 					"2000"
 		"AbilityManaCost"         "100"
 
 		"AbilityCastPoint"       	"0.0"
@@ -276,7 +275,7 @@
 
 		"AbilityCastRange"        "%max_range"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"1"
+		"AbilityDamage" 					"1000"
 		"AbilityManaCost"         "0"
 		"AbilityCooldown"         "0.5"
 
@@ -311,7 +310,7 @@
 
 		"AbilityCastRange"        "%max_range"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"2"
+		"AbilityDamage" 					"2000"
 		"AbilityManaCost"         "100"
 
 		"AbilityCastPoint"       	"0.0"
@@ -339,6 +338,11 @@
 				"var_type" 	"FIELD_FLOAT"
 				"fire_duration" 		"8.0"
 			}
+			"05"
+			{
+				"var_type" 	"FIELD_INTEGER"
+				"damage_per_tick"	"1000.0"
+			}
 		}
 	}
 
@@ -355,7 +359,7 @@
 
 		"AbilityCastRange"        "800"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"2"
+		"AbilityDamage" 					"2000"
 		"AbilityManaCost"         "0"
 		"AbilityCooldown"         "2"
 
@@ -390,7 +394,7 @@
 
 	//	"AbilityCastRange"        "%distance"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"3"
+		"AbilityDamage" 					"3000"
 		"AbilityManaCost"         "100"
 		"AbilityCooldown"         "0"
 

@@ -649,7 +649,6 @@ function BrewProjectile:CreateTrackingProjectile(info)
     spawnOrigin = info.spawnOrigin,
     teamID = proj.teamID
   })
-  dummy:SetForwardVector(info.direction)
 
   if info.model ~= nil then
     dummy:SetModel(info.model)

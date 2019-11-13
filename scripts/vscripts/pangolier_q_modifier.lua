@@ -90,12 +90,14 @@ function pangolier_q_modifier:OnDestroy()
         false
       )
 
+      local damage = self:GetAbility():GetAbilityDamage()
+
       --apply damage
       for _,unit in pairs(units) do
         ApplyDamage({
           victim = unit,
           attacker = parent,
-          damage = 2,
+          damage = damage,
           damage_type = DAMAGE_TYPE_PURE,
           ability = self
         })
