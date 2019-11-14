@@ -275,9 +275,9 @@
 
 		"AbilityCastRange"        "%max_range"
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
-		"AbilityDamage" 					"1000"
+		"AbilityDamage" 					"2000"
 		"AbilityManaCost"         "0"
-		"AbilityCooldown"         "0.5"
+		"AbilityCooldown"         "1.5"
 
 		"AbilityCastPoint"       	"0.0"
     "AnimationIgnoresModelScale" "1"
@@ -361,7 +361,7 @@
 		"AbilityUnitDamageType"  "DAMAGE_TYPE_PURE"
 		"AbilityDamage" 					"2000"
 		"AbilityManaCost"         "0"
-		"AbilityCooldown"         "2"
+		"AbilityCooldown"         "3"
 
 		"AbilityCastPoint"       	"0.0"
     "AnimationIgnoresModelScale" "1"

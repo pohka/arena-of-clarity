@@ -6,7 +6,7 @@ require("filters")
 require("constants")
 
 --nil will not force a hero selection
-local forceHero = "pangolier"
+local forceHero = "sniper"
 
 _G.USE_RELEASE_BUILD = false
 
@@ -71,7 +71,7 @@ function GameSetup:init()
   --RELEASE BUILD
   --=================================
   else 
-    GameRules:SetCustomGameSetupAutoLaunchDelay(120)
+    GameRules:SetCustomGameSetupAutoLaunchDelay(60)
     GameRules:SetHeroSelectionTime(45)
     GameRules:SetStrategyTime(0)
     GameRules:SetPreGameTime(0)
@@ -80,7 +80,7 @@ function GameSetup:init()
 
     --disable some setting which are annoying then testing
     local GameMode = GameRules:GetGameModeEntity()
-    GameMode:SetAnnouncerDisabled(true)
+    --GameMode:SetAnnouncerDisabled(true)
     GameMode:SetDaynightCycleDisabled(true)
     GameMode:DisableHudFlip(true)
     GameMode:SetDeathOverlayDisabled(true)

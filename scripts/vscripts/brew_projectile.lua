@@ -76,6 +76,7 @@ if BrewProjectile == nil then
  _G.BrewProjectile = class({})
  BrewProjectile.data = {}
  BrewProjectile.counter = 0
+ BrewProjectile.groupCounter = 0
  BrewProjectile.lastThinkTime = 0.0
 
  _G.PROJECTILE_ABIL_INDEX = 1
@@ -174,6 +175,13 @@ function BrewProjectile:OnUnitKilled( args )
  end
 end
 
+--return a new id for a projectile group
+function BrewProjectile:NextGroupID()
+  local id = BrewProjectile.groupCounter
+  BrewProjectile.groupCounter = BrewProjectile.groupCounter + 1
+  return id
+end
+
 --[[
   info table:
   ------------
@@ -199,8 +207,10 @@ end
   canBounce, --optional (default = false, if set to true it will allow bouncing)
   minTimeBetweenBounces -- optional (default = 100/speed),
   projectileFlags, -- optional (PROJECTILE_FLAG_NONE = default) bitwise flags for exception rules
-  deleteOnHitWall, --optional (defaolt = false) will destroy projectile on hitting a wall, then calls OnBrewProjectileHitWall(projectileID)
+  deleteOnHitWall, --optional (defaolt = false) will destroy projectile on hitting a wall, then calls OnBrewProjectileHitWall(projectileID),
+  groupID --optional allows you to group projectiles together
 ]]
+
 --creates a linear projectile
 function BrewProjectile:CreateLinearProjectile(info)
   info.teamID = info.owner:GetTeam()
@@ -304,6 +314,10 @@ function BrewProjectile:CreateLinearProjectile(info)
 
   if info.deleteOnHitWall == nil then
     info.deleteOnHitWall = false
+  end
+
+  if info.groupID == nil then
+    info.groupID = -1
   end
   
   local id = dummy:GetProjectileID()
@@ -603,7 +617,7 @@ function BrewProjectile:RemoveProjectile(projectileID)
   end
 end
 
---remove all projectiles
+--remove all projectiles and resets counters for IDs
 function BrewProjectile:RemoveAllProjectiles()
   for id, proj in pairs(BrewProjectile.data) do
     local entindex = BrewProjectile.data[id].entindex
@@ -620,6 +634,8 @@ function BrewProjectile:RemoveAllProjectiles()
       BrewProjectile.data[id] = nil
     end
   end
+
+  BrewProjectile:ResetAllCounters()
 end
 
 --[[
@@ -732,4 +748,10 @@ function BrewProjectile:Dodge(unit)
   for i=1, #removedIDs do
     BrewProjectile:RemoveProjectile(removedIDs[i])
   end
+end
+
+--reset all the counters for IDs
+function BrewProjectile:ResetAllCounters()
+  BrewProjectile.groupCounter = 0
+  BrewProjectile.counter = 0
 end
