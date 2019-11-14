@@ -382,17 +382,21 @@ function BrewProjectile:OnThink()
 end
 
 function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
-  --move projectile dummy
+  --next projectile dummy position
   local pos = dummy:GetAbsOrigin() + (proj.direction * proj.speed * delta)
   pos.z =  GetGroundHeight(pos, dummy) + proj.groundHeight
   local projZ = pos.z
 
   local abil = dummy:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
   if abil:GetIsDisabled() == false then
-    dummy:SetAbsOrigin(pos)
     local bounceCheck = proj.canBounce and GameTime:GetTime() - proj.lastBounceTime > proj.minTimeBetweenBounces
-    if  bounceCheck or proj.deleteOnHitWall then
-      BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, id)
+    if bounceCheck or proj.deleteOnHitWall then
+      local hasHitWall = BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, id)
+      if hasHitWall == false then
+        dummy:SetAbsOrigin(pos)
+      end
+    else
+      dummy:SetAbsOrigin(pos)
     end
 
     proj.currentDistance = proj.currentDistance + proj.speed * delta
@@ -480,7 +484,7 @@ end
 
 function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID)
   local indexes = { 1, 2, 3, 4, 5 ,6 }
-
+  local hasHitWall = false
   local isDebug = false --set to true to enable debug lines
 
   if isDebug then
@@ -503,7 +507,7 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
 
       local color = Vector(0,255,0)
 
-      --rotate the dummy unit so it is axis aligned with wall bounding box
+      --rotate the next dummy unit position so it is axis aligned with wall bounding box
       local pos = vmath:RotateAround(dummy:GetAbsOrigin(), center, -angles.y)
 
       --true there is collision (checking bounding box in world space)
@@ -511,6 +515,8 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
         if proj.ability.OnBrewProjectileHitWall ~= nil then
           proj.ability:OnBrewProjectileHitWall(projID)
         end
+
+        hasHitWall = true
 
         --delete on hit wall case
         if proj.deleteOnHitWall then
@@ -591,6 +597,8 @@ function BrewProjectile:CheckLinearCollisionWithWalls(dummy, proj, delta, projID
       print("not found:" .. name)
     end
   end
+
+  return hasHitWall
 end
 
 --remove a projectile by id

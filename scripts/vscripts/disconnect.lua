@@ -10,46 +10,48 @@ require("task")
 require("game_time")
 
 function Disconnect:CheckConnectedPlayers()
-  local connectedPlayersCount = {}
+  if IsInToolsMode() == false or USE_RELEASE_BUILD then
+    local connectedPlayersCount = {}
 
-  for teamID=TEAM_FIRST, TEAM_LAST do
-    --count connected players per team
-    connectedPlayersCount[teamID] = 0
-    for i=1, PLAYERS_PER_TEAM do
-      local playerID = PlayerResource:GetNthPlayerIDOnTeam(teamID, i)
-      if PlayerResource:IsValidPlayerID(playerID) then
-        local connectionState = PlayerResource:GetConnectionState(playerID)
-        if IsInToolsMode() and USE_RELEASE_BUILD == false then
-          --1 == bot connected
-          if connectionState == DOTA_CONNECTION_STATE_CONNECTED or connectionState == 1 then
-            connectedPlayersCount[teamID] = connectedPlayersCount[teamID] + 1
-          end
-        else
-          if connectionState == DOTA_CONNECTION_STATE_CONNECTED then
-            connectedPlayersCount[teamID] = connectedPlayersCount[teamID] + 1
+    for teamID=TEAM_FIRST, TEAM_LAST do
+      --count connected players per team
+      connectedPlayersCount[teamID] = 0
+      for i=1, PLAYERS_PER_TEAM do
+        local playerID = PlayerResource:GetNthPlayerIDOnTeam(teamID, i)
+        if PlayerResource:IsValidPlayerID(playerID) then
+          local connectionState = PlayerResource:GetConnectionState(playerID)
+          if IsInToolsMode() and USE_RELEASE_BUILD == false then
+            --1 == bot connected
+            if connectionState == DOTA_CONNECTION_STATE_CONNECTED or connectionState == 1 then
+              connectedPlayersCount[teamID] = connectedPlayersCount[teamID] + 1
+            end
+          else
+            if connectionState == DOTA_CONNECTION_STATE_CONNECTED then
+              connectedPlayersCount[teamID] = connectedPlayersCount[teamID] + 1
+            end
           end
         end
       end
     end
-  end
 
-  local totalTeamsConnected = 0
-  local lastConnectedTeamID = 0
-  for teamID=TEAM_FIRST, TEAM_LAST do
-    if connectedPlayersCount[teamID] > 0 then
-      lastConnectedTeamID = teamID
-      totalTeamsConnected = totalTeamsConnected + 1
+    local totalTeamsConnected = 0
+    local lastConnectedTeamID = 0
+    for teamID=TEAM_FIRST, TEAM_LAST do
+      if connectedPlayersCount[teamID] > 0 then
+        lastConnectedTeamID = teamID
+        totalTeamsConnected = totalTeamsConnected + 1
+      end
     end
-  end
 
-  if totalTeamsConnected == 1 then
-    --self:SetVictory(lastConnectedTeamID)
-    Disconnect:BeginTimeout(lastConnectedTeamID)
-  elseif totalTeamsConnected == 0 then --draw ??
-    self:SetVictory(DOTA_TEAM_GOODGUYS)
-    Disconnect:BeginTimeout(lastConnectedTeamID)
-  elseif totalTeamsConnected > 1 and Disconnect.IsPendingDisconnect == true then
-    Disconnect:CancelTimeout()
+    if totalTeamsConnected == 1 then
+      --self:SetVictory(lastConnectedTeamID)
+      Disconnect:BeginTimeout(lastConnectedTeamID)
+    elseif totalTeamsConnected == 0 then --draw ??
+      self:SetVictory(DOTA_TEAM_GOODGUYS)
+      Disconnect:BeginTimeout(lastConnectedTeamID)
+    elseif totalTeamsConnected > 1 and Disconnect.IsPendingDisconnect == true then
+      Disconnect:CancelTimeout()
+    end
   end
 end
 
