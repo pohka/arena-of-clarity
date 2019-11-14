@@ -450,7 +450,7 @@ function CustomGameState:SpawnItems()
 
   --item rarity
   local tier2Rate = 35
-  local tier3Rate = 15
+  local tier3Rate = 10
 
   --local lastTeam = DOTA_TEAM_GOODGUYS
 

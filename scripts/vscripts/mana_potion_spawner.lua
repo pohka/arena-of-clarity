@@ -7,13 +7,13 @@ require("task")
 
 function ManaPotionSpawner:init()
   if IsServer() then
-    Task:Interval(ManaPotionSpawner.OnThink, 8.0, {})
+    Task:Interval(ManaPotionSpawner.OnThink, 6.0, {})
   end
 end
 
 function ManaPotionSpawner:OnThink()
   if IsServer() then
-    local largeRarity = 25
+    local largeRarity = 15
     local maxSpawns = 10
 
     if IsServer() then

@@ -136,7 +136,7 @@ function Filters:AddDamageFilter()
         end
       end
 
-      local manaPerDamage = 15
+      local manaPerDamage = 0.015
       if attacker ~= nil then
         local mana =  damageToUnit * manaPerDamage
         attacker:GiveMana(mana)

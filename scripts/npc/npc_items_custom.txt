@@ -304,7 +304,7 @@
 			"01"
 			{
 				"var_type" 	"FIELD_INTEGER"
-				"mana"				"45"
+				"mana"				"60"
 			}
 		}
 	}
