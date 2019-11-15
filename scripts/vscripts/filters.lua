@@ -117,9 +117,15 @@ function Filters:AddDamageFilter()
       --entindex_victim_const
       --entindex_attacker_const
 
+      
+
       local attacker = EntIndexToHScript(event.entindex_attacker_const)
       local victim = EntIndexToHScript(event.entindex_victim_const)
       event.damage = math.floor(event.damage)
+
+      if victim:HasModifier("hero_damage_immune_modifier") then
+        return true
+      end
       
       if attacker ~= nil then
         if attacker:HasModifier("sven_r_modifier") then

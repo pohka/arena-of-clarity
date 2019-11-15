@@ -24,6 +24,7 @@ require("game_time")
 require("mana_potion_spawner")
 require("brew_projectile")
 require("disconnect")
+require("query")
 
 function CustomGameState:init()
   if IsServer() then
@@ -175,24 +176,48 @@ function CustomGameState:NextRound()
   end
 end
 
-function CustomGameState:OnGameStateChange( )
+function CustomGameState:OnGameStateChange( kv )
   --print("state change:" .. self:GetGameState())
+  print("state:", kv.state, GAME_STATE_POST_FIGHT)
+  if kv.state == GAME_STATE_POST_FIGHT then
+    --silence all heroes in post fight state
+    local units = FindUnitsInRadius(
+      DOTA_TEAM_GOODGUYS,
+      Vector(0, 0, 0),
+      nil,
+      FIND_UNITS_EVERYWHERE,
+      DOTA_UNIT_TARGET_TEAM_BOTH,
+      DOTA_UNIT_TARGET_HERO,
+      DOTA_UNIT_TARGET_FLAG_NONE,
+      FIND_ANY_ORDER,
+      false
+    )
+
+    for _,unit in pairs(units) do
+      local abil = Query:FindAbilityByName(unit, "hero_spawn_booter")
+      if abil ~= nil then
+        abil:OnPostFightState()
+      end
+    end
+  end
 end
 
 function CustomGameState:OnNextRound( event )
   if IsServer() then
-    self:RespawnAll()
+    
     local str = "Round "  .. event.round .. ": ( " .. self:GetTeamScore(DOTA_TEAM_GOODGUYS) .. "-" .. self:GetTeamScore(DOTA_TEAM_BADGUYS) .. " )"
     Say(nil, str, true)
     print(str)
 
-    self:ClearAllPlayersInventory({
-      "item_custom_blink"
-    })
+
     self:DestroyPhysicalItems()
     self:SpawnItems()
     BrewProjectile:RemoveAllProjectiles()
     self:ClearAllAbilitys()
+    self:RespawnAll()
+    self:ClearAllPlayersInventory({
+      "item_custom_blink"
+    })
   end
 
   print("Round " .. event.round .. " begin: ".. GameTime:GetTime())

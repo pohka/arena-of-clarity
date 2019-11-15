@@ -39,7 +39,6 @@ function sven_q:OnBrewProjectileHit(hTarget, hProjectile)
   local teamID = caster:GetTeam()
 
   if hTarget ~= nil then
-    print("hTarget:", hTarget:GetName())
     if hTarget:IsHero() then
       ApplyDamage({
         victim = hTarget,
@@ -64,7 +63,6 @@ function sven_q:OnBrewProjectileHit(hTarget, hProjectile)
         targetProjAbil:SetIsDisabled(true)
 
         local selfProjAbil = hProjectile:GetAbilityByIndex(PROJECTILE_ABIL_INDEX)
-        print("selfProjAil:", selfProjAbil)
         selfProjAbil:SetIsDisabled(true)
 
         --move this projectile to projectile hit

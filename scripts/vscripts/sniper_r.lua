@@ -144,7 +144,7 @@ end
 function sniper_r:OnBrewProjectileHit(hTarget, hProjectile)
   local id = hProjectile:GetProjectileID()
   local proj = BrewProjectile:GetProjectileInfo(id)
-  for k,v in pairs(proj) do print(k,v) end print("-----")
+  --for k,v in pairs(proj) do print(k,v) end print("-----")
   if hTarget ~= nil then
     ApplyDamage({
       victim = hTarget,
@@ -171,6 +171,7 @@ end
 
 --cleans up projectiles, tasks and particles (also called the round ends)
 function sniper_r:AbilityClear()
+  print("clearing", self.taskID)
   if self.taskID ~= nil then
     Task:Interupt(self.taskID)
     self.taskID = nil

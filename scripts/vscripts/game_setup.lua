@@ -45,9 +45,9 @@ function GameSetup:init()
     GameRules:SetSameHeroSelectionEnabled(true)
 
     --disable default respawning and buyback
-    GameRules:SetHeroRespawnEnabled(false)
+    --GameRules:SetHeroRespawnEnabled(false)
     GameMode:SetBuybackEnabled(false)
-    GameMode:SetFixedRespawnTime(1)
+    GameMode:SetFixedRespawnTime(3)
 
     --force single hero selection (optional)
     if forceHero ~= nil then
