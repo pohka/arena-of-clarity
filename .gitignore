@@ -4,3 +4,4 @@ particles/*
 *.cfg
 panorama/layout/*
 *.bin
+tools_thumbnail_cache.bin
