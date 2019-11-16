@@ -87,9 +87,9 @@ function GameSetup:init()
     GameMode:SetWeatherEffectsDisabled(true)
 
     --disable music events
-    GameRules:SetCustomGameAllowHeroPickMusic(false)
+    --GameRules:SetCustomGameAllowHeroPickMusic(false)
     GameRules:SetCustomGameAllowMusicAtGameStart(false)
-    GameRules:SetCustomGameAllowBattleMusic(false)
+    --GameRules:SetCustomGameAllowBattleMusic(false)
 
     Filters:AddAll()
 

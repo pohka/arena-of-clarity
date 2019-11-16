@@ -100,7 +100,9 @@ function BattleArena:OnUnitSpawned( args )
 				local abil = hero:GetAbilityByIndex(i)
 				if abil ~= nil then
 					local maxLevel = abil:GetMaxLevel()
-					abil:SetLevel(maxLevel);
+					if abil:GetLevel() ~= maxLevel then
+						abil:SetLevel(maxLevel);
+					end
 					abil:EndCooldown()
 				end
 				i = i + 1

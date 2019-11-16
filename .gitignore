@@ -4,6 +4,6 @@ materials/*
 particles/*
 *.cfg
 panorama/layout/*
-
+elements/
 
 tools_thumbnail_cache.bin
