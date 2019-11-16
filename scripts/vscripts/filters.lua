@@ -12,11 +12,6 @@ function Filters:AddXPFilter()
 	local GameMode = GameRules:GetGameModeEntity()
 	GameMode:SetModifyExperienceFilter(
 		function(ctx, event)
-			local unit  = EntIndexToHScript(event.hero_entindex_const)
-			if unit ~= nil then
-				unit:GiveMana(50)
-			end
-
 			return false --disable default expeirence
 		end
 		, self)
@@ -117,8 +112,6 @@ function Filters:AddDamageFilter()
       --entindex_victim_const
       --entindex_attacker_const
 
-      
-
       local attacker = EntIndexToHScript(event.entindex_attacker_const)
       local victim = EntIndexToHScript(event.entindex_victim_const)
       event.damage = math.floor(event.damage)
@@ -147,7 +140,6 @@ function Filters:AddDamageFilter()
         local mana =  damageToUnit * manaPerDamage
         attacker:GiveMana(mana)
       end
-
       return true
     end,
     self

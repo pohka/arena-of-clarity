@@ -24,22 +24,29 @@ function Precache( context )
 	PrecacheResource( "model", "models/props_gameplay/boots_of_speed.vmdl", context )
 	PrecacheResource( "model", "models/props_gameplay/mango.vmdl", context )
 	PrecacheResource( "model", "models/props_gameplay/bottle_mango001.vmdl", context )
+	PrecacheResource( "model", "models/heroes/gyro/gyro_missile.vmdl", context )
+	
 	
 
-	PrecacheResource( "particle", "particles/econ/items/mirana/mirana_crescent_arrow/mirana_spell_crescent_arrow.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_skeletonking/skeletonking_hellfireblast.vpcf", context )
-	PrecacheResource( "particle", "particles/items3_fx/lotus_orb_shield.vpcf", context )
+	PrecacheResource( "particle", "particles/wk_r.vpcf", context )
+	PrecacheResource( "particle", "particles/units/heroes/hero_ember_spirit/ember_spirit_remnant_dash_rubick.vpcf", context )
+	PrecacheResource( "particle", "particles/econ/items/ember_spirit/ember_ti9/ember_ti9_flameguard.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/silencer/silencer_ti6/silencer_last_word_status_ti6_ring_ember.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_silencer/silencer_last_word_status_ring_ember.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_storm_bolt.vpcf", context )
 	PrecacheResource( "particle", "particles/status_fx/status_effect_gods_strength.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sven/sven_spell_gods_strength.vpcf", context )
-	PrecacheResource( "particle", "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf", context )
+	PrecacheResource( "particle", "particles/disruptor_ti8_immortal_thunder_strike_buff_red.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_tinker/tinker_rockets_arrow.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/batrider/batrider_ti8_immortal_mount/batrider_ti8_immortal_firefly.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf", context )
 	PrecacheResource( "particle", "particles/econ/items/pangolier/pangolier_ti8_immortal/pangolier_ti8_immortal_shield_crash.vpcf", context )
+	PrecacheResource( "particle", "particles/disruptor_ti8_immortal_thunder_strike_buff_red.vpcf", context )
+	PrecacheResource( "particle", "particles/items_fx/black_king_bar_avatar.vpcf", context )
+	PrecacheResource( "particle", "particles/econ/items/dark_seer/dark_seer_ti8_immortal_arms/dark_seer_ti8_immortal_ion_shell.vpcf", context )
+	PrecacheResource( "particle", "particles/econ/items/tiny/tiny_prestige/tiny_prestige_lvl4_death_embers.vpcf", context )
+	PrecacheResource( "particle", "particles/econ/items/earthshaker/earthshaker_arcana/earthshaker_arcana_target_death.vpcf", context )
 	
 	
 	
@@ -55,6 +62,7 @@ function Precache( context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_bounty_hunter.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_pangolier.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_mars.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds.vsndevts", context )
 end
 
 -- Create the game mode when we activate

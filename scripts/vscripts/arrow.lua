@@ -16,6 +16,11 @@ function arrow:OnSpellStart()
 
   local speed = self:GetSpecialValueFor("speed")
 
+  local effect = "particles/disruptor_ti8_immortal_thunder_strike_buff_red.vpcf"
+  if caster:GetTeam() == 	DOTA_TEAM_GOODGUYS then
+    effect = "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf"
+  end
+
   local projID = BrewProjectile:CreateLinearProjectile({
     owner = caster,
     ability = self,
@@ -28,7 +33,7 @@ function arrow:OnSpellStart()
     providesVision = true,
     visionRadius = 350,
     unitTargetType = DOTA_UNIT_TARGET_HERO,
-    effect = "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf",
+    effect = effect,
     canBounce = true,
     maxDuration = 5.0,
     groundHeight = 40
@@ -43,7 +48,6 @@ end
 function arrow:OnBrewProjectileHit(hTarget, vLocation)
  
   if hTarget ~= nil then
-    print("hit target:" .. hTarget:GetName())
     ApplyDamage({
       victim = hTarget,
       attacker = self:GetCaster(),
@@ -52,7 +56,13 @@ function arrow:OnBrewProjectileHit(hTarget, vLocation)
       ability = self
     })
 
-    hTarget:EmitSound("Hero_BountyHunter.Shuriken.Impact")
+    local fxIndex = ParticleManager:CreateParticle(
+      "particles/econ/items/tiny/tiny_prestige/tiny_prestige_lvl4_death_embers.vpcf",
+      PATTACH_ABSORIGIN,
+      hTarget
+    )
+
+    hTarget:EmitSound("BodyImpact_Common.Giant")
   end
 
   return true

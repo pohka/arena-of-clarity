@@ -431,7 +431,7 @@ function BrewProjectile:OnThinkLinear(dummy, id, proj, delta)
       if hasFoundTarget == false then
         --check z-axis
         local targetPos = target:GetAbsOrigin()
-        if targetPos.z - projZ < zMaxDiff then
+        if math.abs(targetPos.z - projZ) < zMaxDiff then
           hasFoundTarget = true
           
           local isAllowedToDeleteOnHit = true

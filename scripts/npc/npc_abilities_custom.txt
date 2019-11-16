@@ -353,7 +353,6 @@
 
 		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
     "AbilityTextureName"     "tusk_walrus_kick"
-    "AbilityType"            "DOTA_ABILITY_TYPE_ULTIMATE"
     "MaxLevel"               "1"
     "RequiredLevel"          "1"
 
@@ -414,5 +413,11 @@
 				"angle" 		"35"
 			}
 		}
+	}
+
+	"hidden_abil"
+	{
+		"BaseClass"           "ability_datadriven"
+		"AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_HIDDEN"
 	}
 }

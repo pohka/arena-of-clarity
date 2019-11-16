@@ -24,11 +24,13 @@ function sven_q:OnSpellStart()
     direction = direction,
     spawnOrigin = caster:GetAbsOrigin(),
     radius = 100,
-    effect = "particles/items3_fx/lotus_orb_shield.vpcf",
+    effect = "particles/econ/items/ember_spirit/ember_ti9/ember_ti9_flameguard.vpcf",
+    --attachType = PATTACH_OVERHEAD_FOLLOW,
     deleteOnHit = true,
     deleteOnOwnerKilled = false,
     maxDuration = 2.0,
-    projectileFlags = PROJECTILE_FLAG_OTHERS_CANT_DISABLE
+    projectileFlags = PROJECTILE_FLAG_OTHERS_CANT_DISABLE,
+    groundHeight = -20
   })
 
   caster:EmitSound("Hero_Sven.StormBolt")

@@ -11,7 +11,7 @@ function wraith_king_q:OnSpellStart()
       target = target,
       owner = caster,
       ability = self,
-      effect = "particles/econ/items/dark_seer/dark_seer_ti8_immortal_arms/dark_seer_ti8_immortal_ion_shell.vpcf",
+      effect = "particles/units/heroes/hero_ember_spirit/ember_spirit_remnant_dash_rubick.vpcf",
       --attachType = PATTACH_ABSORIGIN_FOLLOW,
       speed = self:GetSpecialValueFor("projectile_speed"),
      -- radius = 64, --optional (default = 32)

@@ -177,8 +177,6 @@ function CustomGameState:NextRound()
 end
 
 function CustomGameState:OnGameStateChange( kv )
-  --print("state change:" .. self:GetGameState())
-  print("state:", kv.state, GAME_STATE_POST_FIGHT)
   if kv.state == GAME_STATE_POST_FIGHT then
     --silence all heroes in post fight state
     local units = FindUnitsInRadius(
@@ -244,10 +242,25 @@ function CustomGameState:OnUnitKilled( args )
   -- splitscreenplayer
 
   if IsServer() then
+    
+    local killedUnit = EntIndexToHScript(args.entindex_killed)
+
+    if killedUnit ~= nil then
+      if killedUnit:IsHero() then
+        print("here", killedUnit)
+        local fxIndex = ParticleManager:CreateParticle(
+          "particles/econ/items/earthshaker/earthshaker_arcana/earthshaker_arcana_target_death.vpcf",
+          PATTACH_WORLDORIGIN,
+          killedUnit
+        )
+        ParticleManager:SetParticleControl(fxIndex, 0, killedUnit:GetAbsOrigin())
+      end
+    end
+
     local state = self:GetGameState()
 
     if state == GAME_STATE_FIGHT then
-      local killedUnit = EntIndexToHScript(args.entindex_killed)
+      
 
       if killedUnit ~= nil then
         if killedUnit:IsHero() then
@@ -256,7 +269,7 @@ function CustomGameState:OnUnitKilled( args )
           --give attacker mana
           local attacker = EntIndexToHScript(args.entindex_attacker)
           if attacker ~= nil then
-            attacker:GiveMana(50)
+            attacker:GiveMana(30)
 
             --refresh all of attacker's items and spells
             for i=0, attacker:GetAbilityCount()-1 do

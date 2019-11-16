@@ -42,7 +42,7 @@ function wraith_king_r:OnSpellStart()
       providesVision = true,
       visionRadius = 350,
       unitTargetType = DOTA_UNIT_TARGET_HERO,
-      effect = "particles/econ/items/disruptor/disruptor_ti8_immortal_weapon/disruptor_ti8_immortal_thunder_strike_buff.vpcf",
+      effect = "particles/wk_r.vpcf",
       canBounce = true,
       maxDuration = 8.0,
       groundHeight = 40

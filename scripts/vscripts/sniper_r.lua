@@ -171,7 +171,6 @@ end
 
 --cleans up projectiles, tasks and particles (also called the round ends)
 function sniper_r:AbilityClear()
-  print("clearing", self.taskID)
   if self.taskID ~= nil then
     Task:Interupt(self.taskID)
     self.taskID = nil

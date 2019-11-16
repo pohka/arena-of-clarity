@@ -19,5 +19,5 @@ if Constants == nil then
   _G.PROJECTILE_TYPE_TRACKING = 1
 
 
-  _G.Z_MAX_DIFF = 100 --maximum distance between checks in z-axis
+  _G.Z_MAX_DIFF = 150 --maximum distance between checks in z-axis
 end
